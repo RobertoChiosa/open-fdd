@@ -43,7 +43,6 @@ AHU_MIN_OA = 20
 OAT_DEGF_ERR_THRES = 5
 MAT_DEGF_ERR_THRES = 5
 
-
 _fc10 = FaultConditionTen(
     OAT_DEGF_ERR_THRES,
     MAT_DEGF_ERR_THRES,
@@ -53,15 +52,13 @@ _fc10 = FaultConditionTen(
     "AHU: Outdoor Air Damper Control Signal",
 )
 
-
-_fc10_report = FaultCodeTenReport(    
+_fc10_report = FaultCodeTenReport(
     "AHU: Mixed Air Temperature",
     "AHU: Outdoor Air Temperature",
     "AHU: Cooling Coil Valve Control Signal",
     "AHU: Outdoor Air Damper Control Signal",
     "AHU: Supply Air Fan Speed Control Signal"
 )
-
 
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
 
@@ -79,11 +76,8 @@ df2 = _fc10.apply(df)
 print(df2.head())
 print(df2.describe())
 
-
-
 document = _fc10_report.create_report(args.output, df2)
 path = os.path.join(os.path.curdir, "final_report")
 if not os.path.exists(path):
     os.makedirs(path)
 document.save(os.path.join(path, f"{args.output}.docx"))
-

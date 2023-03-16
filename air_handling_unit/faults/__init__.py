@@ -7,14 +7,14 @@ class FaultConditionOne:
     """Class provides the definitions for Fault Condition 1."""
 
     def __init__(
-        self,
-        vfd_speed_percent_err_thres: float,
-        vfd_speed_percent_max: float,
-        duct_static_inches_err_thres: float,
-        duct_static_col: str,
-        supply_vfd_speed_col: str,
-        duct_static_setpoint_col: str,
-        troubleshoot=False
+            self,
+            vfd_speed_percent_err_thres: float,
+            vfd_speed_percent_max: float,
+            duct_static_inches_err_thres: float,
+            duct_static_col: str,
+            supply_vfd_speed_col: str,
+            duct_static_setpoint_col: str,
+            troubleshoot=False
     ):
         self.vfd_speed_percent_err_thres = vfd_speed_percent_err_thres
         self.vfd_speed_percent_max = vfd_speed_percent_max
@@ -26,7 +26,7 @@ class FaultConditionOne:
 
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
         df['static_check_'] = (
-            df[self.duct_static_col] < df[self.duct_static_setpoint_col] - self.duct_static_inches_err_thres)
+                df[self.duct_static_col] < df[self.duct_static_setpoint_col] - self.duct_static_inches_err_thres)
         df['fan_check_'] = (df[self.supply_vfd_speed_col] >=
                             self.vfd_speed_percent_max - self.vfd_speed_percent_err_thres)
 
@@ -46,15 +46,15 @@ class FaultConditionTwo:
     """Class provides the definitions for Fault Condition 2."""
 
     def __init__(
-        self,
-        mix_degf_err_thres: float,
-        return_degf_err_thres: float,
-        outdoor_degf_err_thres: float,
-        mat_col: str,
-        rat_col: str,
-        oat_col: str,
-        fan_vfd_speed_col: str,
-        troubleshoot=False
+            self,
+            mix_degf_err_thres: float,
+            return_degf_err_thres: float,
+            outdoor_degf_err_thres: float,
+            mat_col: str,
+            rat_col: str,
+            oat_col: str,
+            fan_vfd_speed_col: str,
+            troubleshoot=False
     ):
         self.mix_degf_err_thres = mix_degf_err_thres
         self.return_degf_err_thres = return_degf_err_thres
@@ -72,11 +72,11 @@ class FaultConditionTwo:
                                           df[self.oat_col] - self.outdoor_degf_err_thres)
 
         df["fc2_flag"] = (
-            (df['mat_check'] < df['temp_min_check'])
+                (df['mat_check'] < df['temp_min_check'])
 
-            # this fault is supposed to contain OS state 5
-            # confirm with G36 fault author adding in fan status okay
-            & (df[self.fan_vfd_speed_col] > .01)
+                # this fault is supposed to contain OS state 5
+                # confirm with G36 fault author adding in fan status okay
+                & (df[self.fan_vfd_speed_col] > .01)
         ).astype(int)
 
         if self.troubleshoot:
@@ -93,15 +93,15 @@ class FaultConditionThree:
     """Class provides the definitions for Fault Condition 3."""
 
     def __init__(
-        self,
-        mix_degf_err_thres: float,
-        return_degf_err_thres: float,
-        outdoor_degf_err_thres: float,
-        mat_col: str,
-        rat_col: str,
-        oat_col: str,
-        fan_vfd_speed_col: str,
-        troubleshoot=False
+            self,
+            mix_degf_err_thres: float,
+            return_degf_err_thres: float,
+            outdoor_degf_err_thres: float,
+            mat_col: str,
+            rat_col: str,
+            oat_col: str,
+            fan_vfd_speed_col: str,
+            troubleshoot=False
     ):
         self.mix_degf_err_thres = mix_degf_err_thres
         self.return_degf_err_thres = return_degf_err_thres
@@ -119,11 +119,11 @@ class FaultConditionThree:
                                           df[self.oat_col] + self.outdoor_degf_err_thres)
 
         df["fc3_flag"] = (
-            (df['mat_check'] > df['temp_min_check'])
+                (df['mat_check'] > df['temp_min_check'])
 
-            # this fault is supposed to contain OS state 5
-            # confirm with G36 fault author adding in fan status okay
-            & (df[self.fan_vfd_speed_col] > .01)
+                # this fault is supposed to contain OS state 5
+                # confirm with G36 fault author adding in fan status okay
+                & (df[self.fan_vfd_speed_col] > .01)
         ).astype(int)
 
         if self.troubleshoot:
@@ -140,14 +140,14 @@ class FaultConditionFour:
     """Class provides the definitions for Fault Condition 4."""
 
     def __init__(
-        self,
-        delta_os_max: float,
-        ahu_min_oa: float,
-        economizer_sig_col: str,
-        heating_sig_col: str,
-        cooling_sig_col: str,
-        fan_vfd_speed_col: str,
-        troubleshoot=False
+            self,
+            delta_os_max: float,
+            ahu_min_oa: float,
+            economizer_sig_col: str,
+            heating_sig_col: str,
+            cooling_sig_col: str,
+            fan_vfd_speed_col: str,
+            troubleshoot=False
     ):
         self.delta_os_max = delta_os_max
         self.ahu_min_oa = ahu_min_oa
@@ -159,37 +159,36 @@ class FaultConditionFour:
 
     # adds in these boolean columns to the dataframe
     def os_state_change_calcs(self, df):
-
         # AHU htg only mode based on OA damper @ min oa and only htg pid/vlv modulating
         df['heating_mode'] = (
-            (df[self.heating_sig_col] > 0)
-            & (df[self.cooling_sig_col] == 0)
-            & (df[self.fan_vfd_speed_col] > 0)
-            & (df[self.economizer_sig_col] == self.ahu_min_oa)
+                (df[self.heating_sig_col] > 0)
+                & (df[self.cooling_sig_col] == 0)
+                & (df[self.fan_vfd_speed_col] > 0)
+                & (df[self.economizer_sig_col] == self.ahu_min_oa)
         )
 
         # AHU econ only mode based on OA damper modulating and clg htg = zero
         df['econ_only_cooling_mode'] = (
-            (df[self.heating_sig_col] == 0)
-            & (df[self.cooling_sig_col] == 0)
-            & (df[self.fan_vfd_speed_col] > 0)
-            & (df[self.economizer_sig_col] > self.ahu_min_oa)
+                (df[self.heating_sig_col] == 0)
+                & (df[self.cooling_sig_col] == 0)
+                & (df[self.fan_vfd_speed_col] > 0)
+                & (df[self.economizer_sig_col] > self.ahu_min_oa)
         )
 
         # AHU econ+mech clg mode based on OA damper modulating for cooling and clg pid/vlv modulating
         df['econ_plus_mech_cooling_mode'] = (
-            (df[self.heating_sig_col] == 0)
-            & (df[self.cooling_sig_col] > 0)
-            & (df[self.fan_vfd_speed_col] > 0)
-            & (df[self.economizer_sig_col] > self.ahu_min_oa)
+                (df[self.heating_sig_col] == 0)
+                & (df[self.cooling_sig_col] > 0)
+                & (df[self.fan_vfd_speed_col] > 0)
+                & (df[self.economizer_sig_col] > self.ahu_min_oa)
         )
 
         # AHU mech mode based on OA damper @ min OA and clg pid/vlv modulating
         df['mech_cooling_only_mode'] = (
-            (df[self.heating_sig_col] == 0)
-            & (df[self.cooling_sig_col] > 0)
-            & (df[self.fan_vfd_speed_col] > 0)
-            & (df[self.economizer_sig_col] == self.ahu_min_oa)
+                (df[self.heating_sig_col] == 0)
+                & (df[self.cooling_sig_col] > 0)
+                & (df[self.fan_vfd_speed_col] > 0)
+                & (df[self.economizer_sig_col] == self.ahu_min_oa)
         )
 
         df = df.astype(int)
@@ -217,15 +216,15 @@ class FaultConditionFive:
     """Class provides the definitions for Fault Condition 5."""
 
     def __init__(
-        self,
-        mix_degf_err_thres: float,
-        supply_degf_err_thres: float,
-        delta_t_supply_fan: float,
-        mat_col: str,
-        sat_col: str,
-        htg_vlv_col: str,
-        fan_vfd_speed_col: str,
-        troubleshoot=False
+            self,
+            mix_degf_err_thres: float,
+            supply_degf_err_thres: float,
+            delta_t_supply_fan: float,
+            mat_col: str,
+            sat_col: str,
+            htg_vlv_col: str,
+            fan_vfd_speed_col: str,
+            troubleshoot=False
     ):
         self.mix_degf_err_thres = mix_degf_err_thres
         self.supply_degf_err_thres = supply_degf_err_thres
@@ -242,16 +241,16 @@ class FaultConditionFive:
 
         df['sat_check'] = df[self.sat_col] + self.supply_degf_err_thres
         df['mat_check'] = df[self.mat_col] - \
-            self.mix_degf_err_thres + self.delta_t_supply_fan
+                          self.mix_degf_err_thres + self.delta_t_supply_fan
 
         df["fc5_flag"] = (
-            (df['sat_check'] <= df['mat_check'])
+                (df['sat_check'] <= df['mat_check'])
 
-            # this is to make fault only active in OS1 for htg mode only
-            # and fan is running. Some control programming may use htg
-            # vlv when AHU is off to prevent low limit freeze alarms
-            & (df[self.htg_vlv_col] > .01)
-            & (df[self.fan_vfd_speed_col] > .01)
+                # this is to make fault only active in OS1 for htg mode only
+                # and fan is running. Some control programming may use htg
+                # vlv when AHU is off to prevent low limit freeze alarms
+                & (df[self.htg_vlv_col] > .01)
+                & (df[self.fan_vfd_speed_col] > .01)
         ).astype(int)
 
         if self.troubleshoot:
@@ -271,22 +270,22 @@ class FaultConditionSix:
     """
 
     def __init__(
-        self,
-        airflow_err_thres: float,
-        ahu_min_cfm_design: float,
-        oat_degf_err_thres: float,
-        rat_degf_err_thres: float,
-        oat_rat_delta_min: float,
-        ahu_min_oa_dpr: float,
-        vav_total_flow_col: float,
-        mat_col: str,
-        oat_col: str,
-        rat_col: str,
-        fan_vfd_speed_col: str,
-        economizer_sig_col: str,
-        heating_sig_col: str,
-        cooling_sig_col: str,
-        troubleshoot=False
+            self,
+            airflow_err_thres: float,
+            ahu_min_cfm_design: float,
+            oat_degf_err_thres: float,
+            rat_degf_err_thres: float,
+            oat_rat_delta_min: float,
+            ahu_min_oa_dpr: float,
+            vav_total_flow_col: float,
+            mat_col: str,
+            oat_col: str,
+            rat_col: str,
+            fan_vfd_speed_col: str,
+            economizer_sig_col: str,
+            heating_sig_col: str,
+            cooling_sig_col: str,
+            troubleshoot=False
     ):
         self.airflow_err_thres = airflow_err_thres
         self.ahu_min_cfm_design = ahu_min_cfm_design
@@ -309,7 +308,7 @@ class FaultConditionSix:
         # create helper columns
         df['rat_minus_oat'] = abs(df[self.rat_col] - df[self.oat_col])
         df['percent_oa_calc'] = (df[self.mat_col] - df[self.rat_col]) / \
-            (df[self.oat_col] - df[self.rat_col])
+                                (df[self.oat_col] - df[self.rat_col])
 
         # weed out any negative values
         df['percent_oa_calc'] = df['percent_oa_calc'].apply(
@@ -348,8 +347,8 @@ class FaultConditionSix:
 
         else:
             # drop helper columns
-            #del df['percent_oa_calc']
-            #del df['perc_OAmin']
+            # del df['percent_oa_calc']
+            # del df['perc_OAmin']
             pass
 
         return df
@@ -361,13 +360,13 @@ class FaultConditionSeven:
     """
 
     def __init__(
-        self,
-        sat_degf_err_thres: float,
-        sat_col: str,
-        satsp_col: str,
-        htg_col: str,
-        fan_vfd_speed_col: str,
-        troubleshoot=False
+            self,
+            sat_degf_err_thres: float,
+            sat_col: str,
+            satsp_col: str,
+            htg_col: str,
+            fan_vfd_speed_col: str,
+            troubleshoot=False
     ):
         self.sat_degf_err_thres = sat_degf_err_thres
         self.sat_col = sat_col
@@ -378,11 +377,11 @@ class FaultConditionSeven:
 
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
         df["fc7_flag"] = (
-            ((df[self.sat_col]).lt(df[self.satsp_col] - self.sat_degf_err_thres))
+                ((df[self.sat_col]).lt(df[self.satsp_col] - self.sat_degf_err_thres))
 
-            # verify ahu is running in OS 1 at near full heat
-            & (df[self.htg_col] > 90.)
-            & (df[self.fan_vfd_speed_col] > 0)
+                # verify ahu is running in OS 1 at near full heat
+                & (df[self.htg_col] > 90.)
+                & (df[self.fan_vfd_speed_col] > 0)
         ).astype(int)
 
         if self.troubleshoot:
@@ -395,16 +394,16 @@ class FaultConditionEight:
     """Class provides the definitions for Fault Condition 8."""
 
     def __init__(
-        self,
-        delta_supply_fan: str,
-        mix_err_thres: str,
-        supply_err_thres: str,
-        ahu_min_oa: float,
-        mat_col: str,
-        sat_col: str,
-        economizer_sig_col: str,
-        cooling_sig_col: str,
-        troubleshoot=False
+            self,
+            delta_supply_fan: str,
+            mix_err_thres: str,
+            supply_err_thres: str,
+            ahu_min_oa: float,
+            mat_col: str,
+            sat_col: str,
+            economizer_sig_col: str,
+            cooling_sig_col: str,
+            troubleshoot=False
     ):
         self.delta_supply_fan = delta_supply_fan
         self.mix_err_thres = mix_err_thres
@@ -421,14 +420,14 @@ class FaultConditionEight:
             df[self.sat_col] - self.delta_supply_fan - df[self.mat_col])
 
         df['sat_mat_sqrted'] = np.sqrt(
-            self.supply_err_thres**2 + self.mix_err_thres**2)
+            self.supply_err_thres ** 2 + self.mix_err_thres ** 2)
 
         df['fc8_flag'] = (
-            (df['sat_fan_mat'] > df['sat_mat_sqrted'])
+                (df['sat_fan_mat'] > df['sat_mat_sqrted'])
 
-            # verify AHU is in OS2 only free cooling mode obly
-            & (df[self.economizer_sig_col] < self.ahu_min_oa)
-            & (df[self.cooling_sig_col] == 0)
+                # verify AHU is in OS2 only free cooling mode obly
+                & (df[self.economizer_sig_col] < self.ahu_min_oa)
+                & (df[self.cooling_sig_col] == 0)
         ).astype(int)
 
         if self.troubleshoot:
@@ -446,16 +445,16 @@ class FaultConditionNine:
     """Class provides the definitions for Fault Condition 9."""
 
     def __init__(
-        self,
-        delta_supply_fan: float,
-        oat_err_thres: float,
-        supply_err_thres: float,
-        ahu_min_oa: float,
-        satsp_col: str,
-        oat_col: str,
-        cooling_sig_col: str,
-        economizer_sig_col: str,
-        troubleshoot=False
+            self,
+            delta_supply_fan: float,
+            oat_err_thres: float,
+            supply_err_thres: float,
+            ahu_min_oa: float,
+            satsp_col: str,
+            oat_col: str,
+            cooling_sig_col: str,
+            economizer_sig_col: str,
+            troubleshoot=False
     ):
         self.delta_supply_fan = delta_supply_fan
         self.oat_err_thres = oat_err_thres
@@ -470,14 +469,14 @@ class FaultConditionNine:
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
         df['oat_minus_oaterror'] = df[self.oat_col] - self.oat_err_thres
         df['satsp_delta_saterr'] = df[self.satsp_col] - \
-            self.delta_supply_fan + self.supply_err_thres
+                                   self.delta_supply_fan + self.supply_err_thres
 
         df['fc9_flag'] = (
-            (df['oat_minus_oaterror'] > df['satsp_delta_saterr'])
+                (df['oat_minus_oaterror'] > df['satsp_delta_saterr'])
 
-            # verify AHU is in OS2 only free cooling mode obly
-            & (df[self.economizer_sig_col] < self.ahu_min_oa)
-            & (df[self.cooling_sig_col] == 0)
+                # verify AHU is in OS2 only free cooling mode obly
+                & (df[self.economizer_sig_col] < self.ahu_min_oa)
+                & (df[self.cooling_sig_col] == 0)
         ).astype(int)
 
         if self.troubleshoot:
@@ -495,14 +494,14 @@ class FaultConditionTen:
     """Class provides the definitions for Fault Condition 10."""
 
     def __init__(
-        self,
-        oat_err_thres: float,
-        mat_err_thres: float,
-        oat_col: str,
-        mat_col: str,
-        clg_col: str,
-        economizer_sig_col: str,
-        troubleshoot=False
+            self,
+            oat_err_thres: float,
+            mat_err_thres: float,
+            oat_col: str,
+            mat_col: str,
+            clg_col: str,
+            economizer_sig_col: str,
+            troubleshoot=False
     ):
 
         self.oat_err_thres = oat_err_thres
@@ -519,11 +518,11 @@ class FaultConditionTen:
             self.mat_err_thres ** 2 + self.oat_err_thres ** 2)
 
         df['fc10_flag'] = (
-            (df['abs_mat_minus_oat'] > df['mat_oat_sqrted'])
+                (df['abs_mat_minus_oat'] > df['mat_oat_sqrted'])
 
-            # verify ahu is running in OS 3 clg mode in min OA
-            & (df[self.clg_col] > 0)
-            & (df[self.economizer_sig_col] > 90.)
+                # verify ahu is running in OS 3 clg mode in min OA
+                & (df[self.clg_col] > 0)
+                & (df[self.economizer_sig_col] > 90.)
         ).astype(int)
 
         if self.troubleshoot:
@@ -541,15 +540,15 @@ class FaultConditionEleven:
     """Class provides the definitions for Fault Condition 11. Very similar to FC11."""
 
     def __init__(
-        self,
-        delta_supply_fan: float,
-        oat_err_thres: float,
-        supply_err_thres: float,
-        satsp_col: str,
-        oat_col: str,
-        clg_col: str,
-        economizer_sig_col: str,
-        troubleshoot=False
+            self,
+            delta_supply_fan: float,
+            oat_err_thres: float,
+            supply_err_thres: float,
+            satsp_col: str,
+            oat_col: str,
+            clg_col: str,
+            economizer_sig_col: str,
+            troubleshoot=False
     ):
         self.delta_supply_fan = delta_supply_fan
         self.oat_err_thres = oat_err_thres
@@ -563,14 +562,14 @@ class FaultConditionEleven:
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
         df['oat_plus_oaterror'] = df[self.oat_col] + self.oat_err_thres
         df['satsp_delta_saterr'] = df[self.satsp_col] - \
-            self.delta_supply_fan - self.supply_err_thres
+                                   self.delta_supply_fan - self.supply_err_thres
 
         df['fc11_flag'] = (
-            (df['oat_plus_oaterror'] < df['satsp_delta_saterr'])
+                (df['oat_plus_oaterror'] < df['satsp_delta_saterr'])
 
-            # verify ahu is running in OS 3 clg mode in 100 OA
-            & (df[self.clg_col] > 0)
-            & (df[self.economizer_sig_col] > 90.)
+                # verify ahu is running in OS 3 clg mode in 100 OA
+                & (df[self.clg_col] > 0)
+                & (df[self.economizer_sig_col] > 90.)
         ).astype(int)
 
         if self.troubleshoot:
@@ -588,16 +587,16 @@ class FaultConditionTwelve:
     """Class provides the definitions for Fault Condition 12."""
 
     def __init__(
-        self,
-        delta_supply_fan: float,
-        mix_err_thres: float,
-        supply_err_thres: float,
-        ahu_min_oa_dpr: float,
-        sat_col: str,
-        mat_col: str,
-        clg_col: str,
-        economizer_sig_col: str,
-        troubleshoot=False
+            self,
+            delta_supply_fan: float,
+            mix_err_thres: float,
+            supply_err_thres: float,
+            ahu_min_oa_dpr: float,
+            sat_col: str,
+            mat_col: str,
+            clg_col: str,
+            economizer_sig_col: str,
+            troubleshoot=False
     ):
         self.delta_supply_fan = delta_supply_fan
         self.mix_err_thres = mix_err_thres
@@ -611,7 +610,7 @@ class FaultConditionTwelve:
 
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
         df['sat_minus_saterr_delta_supply_fan'] = df[self.sat_col] - \
-            self.supply_err_thres - self.delta_supply_fan
+                                                  self.supply_err_thres - self.delta_supply_fan
         df['mat_plus_materr'] = df[self.mat_col] + self.mix_err_thres
 
         df["fc12_flag"] = operator.or_(
@@ -644,14 +643,14 @@ class FaultConditionThirteen:
     """
 
     def __init__(
-        self,
-        sat_degf_err_thres: float,
-        ahu_min_oa_dpr: float,
-        sat_col: str,
-        satsp_col: str,
-        clg_col: str,
-        economizer_sig_col: str,
-        troubleshoot=False
+            self,
+            sat_degf_err_thres: float,
+            ahu_min_oa_dpr: float,
+            sat_col: str,
+            satsp_col: str,
+            clg_col: str,
+            economizer_sig_col: str,
+            troubleshoot=False
     ):
         self.sat_degf_err_thres = sat_degf_err_thres
         self.ahu_min_oa_dpr = ahu_min_oa_dpr
@@ -662,7 +661,6 @@ class FaultConditionThirteen:
         self.troubleshoot = troubleshoot
 
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
-
         df["fc13_flag"] = operator.or_(
             ((df[self.sat_col] > df[self.satsp_col]) + self.sat_degf_err_thres)
             # OS4 AHU state clg @ min OA

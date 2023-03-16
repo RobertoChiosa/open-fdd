@@ -49,8 +49,8 @@ _fc11 = FaultConditionEleven(
     "AHU: Cooling Coil Valve Control Signal",
     "AHU: Outdoor Air Damper Control Signal"
 )
-        
-_fc11_report = FaultCodeElevenReport(    
+
+_fc11_report = FaultCodeElevenReport(
     "AHU: Supply Air Temperature Set Point",
     "AHU: Outdoor Air Temperature",
     "AHU: Cooling Coil Valve Control Signal",
@@ -58,9 +58,7 @@ _fc11_report = FaultCodeElevenReport(
     "AHU: Supply Air Fan Speed Control Signal"
 )
 
-
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
-
 
 start = df.head(1).index.date
 print("Dataset start: ", start)
@@ -75,7 +73,6 @@ for col in df.columns:
 df2 = _fc11.apply(df)
 print(df2.head())
 print(df2.describe())
-
 
 document = _fc11_report.create_report(args.output, df2)
 path = os.path.join(os.path.curdir, "final_report")

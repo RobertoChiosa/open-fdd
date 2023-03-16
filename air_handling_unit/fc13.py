@@ -45,20 +45,18 @@ _fc13 = FaultConditionThirteen(
     SAT_DEGF_ERR_THRES,
     AHU_MIN_OA,
     "AHU: Supply Air Temperature",
-    "AHU: Supply Air Temperature Set Point",	
+    "AHU: Supply Air Temperature Set Point",
     "AHU: Cooling Coil Valve Control Signal",
     "AHU: Outdoor Air Damper Control Signal",
 )
 
-        
-_fc13_report = FaultCodeThirteenReport(    
+_fc13_report = FaultCodeThirteenReport(
     "AHU: Supply Air Temperature",
-    "AHU: Supply Air Temperature Set Point",	
+    "AHU: Supply Air Temperature Set Point",
     "AHU: Cooling Coil Valve Control Signal",
     "AHU: Outdoor Air Damper Control Signal",
     "AHU: Supply Air Fan Speed Control Signal"
 )
-
 
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
 
@@ -75,7 +73,6 @@ for col in df.columns:
 df2 = _fc13.apply(df)
 print(df2.head())
 print(df2.describe())
-
 
 document = _fc13_report.create_report(args.output, df2)
 path = os.path.join(os.path.curdir, "final_report")

@@ -54,15 +54,13 @@ _fc12 = FaultConditionTwelve(
     "AHU: Outdoor Air Damper Control Signal"
 )
 
-
-_fc12_report = FaultCodeTwelveReport(    
+_fc12_report = FaultCodeTwelveReport(
     "AHU: Supply Air Temperature",
     "AHU: Mixed Air Temperature",
     "AHU: Cooling Coil Valve Control Signal",
     "AHU: Outdoor Air Damper Control Signal",
     "AHU: Supply Air Fan Speed Control Signal"
 )
-
 
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
 
@@ -79,7 +77,6 @@ for col in df.columns:
 df2 = _fc12.apply(df)
 print(df2.head())
 print(df2.describe())
-
 
 document = _fc12_report.create_report(args.output, df2)
 path = os.path.join(os.path.curdir, "final_report")

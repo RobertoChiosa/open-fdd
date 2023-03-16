@@ -14,7 +14,6 @@ every time for the flag mean col output.
 Future compare to ML FDD Vs rule based FDD
 '''
 
-
 TEST_DUCT_STATIC_COL = "duct_static"
 TEST_DUCT_STATIC_SETPOINT_COL = "duct_static_setpoint"
 TEST_SUPPLY_VFD_SPEED_COL = "supply_vfd_speed"
@@ -71,7 +70,7 @@ def test_failing(failing_df):
         TEST_SUPPLY_VFD_SPEED_COL,
         TEST_DUCT_STATIC_SETPOINT_COL,
     )
-    
+
     results = fc1.apply(failing_df)
     actual = results["fc1_flag"].mean()
     expected = 0.89
@@ -88,7 +87,7 @@ def test_passing(passing_df):
         TEST_SUPPLY_VFD_SPEED_COL,
         TEST_DUCT_STATIC_SETPOINT_COL,
     )
-    
+
     results = fc1.apply(passing_df)
     actual = results["fc1_flag"].mean()
     expected = 0.11

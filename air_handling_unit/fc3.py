@@ -41,7 +41,6 @@ OUTDOOR_DEGF_ERR_THRES = 5.
 MIX_DEGF_ERR_THRES = 5.
 RETURN_DEGF_ERR_THRES = 2.
 
-
 _fc3 = FaultConditionThree(
     MIX_DEGF_ERR_THRES,
     RETURN_DEGF_ERR_THRES,
@@ -51,7 +50,6 @@ _fc3 = FaultConditionThree(
     "AHU: Outdoor Air Temperature",
     "AHU: Supply Air Fan Speed Control Signal"
 )
-
 
 _fc3_report = FaultCodeThreeReport(
     MIX_DEGF_ERR_THRES,
@@ -63,10 +61,7 @@ _fc3_report = FaultCodeThreeReport(
     "AHU: Supply Air Fan Speed Control Signal"
 )
 
-
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
-
-
 
 start = df.head(1).index.date
 print("Dataset start: ", start)

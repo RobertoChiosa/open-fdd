@@ -34,13 +34,11 @@ args.add_argument('--no-SI-units', dest='use-SI-units', action='store_false')
 """
 args = parser.parse_args()
 
-# G36 params shouldnt need adjusting
+# G36 params shouldn't need adjusting
 # error threshold parameters
 VFD_SPEED_PERCENT_ERR_THRES = 0.05
 VFD_SPEED_PERCENT_MAX = 0.99
 DUCT_STATIC_INCHES_ERR_THRES = 0.1
-
-
 
 _fc1 = FaultConditionOne(
     VFD_SPEED_PERCENT_ERR_THRES,
@@ -51,7 +49,6 @@ _fc1 = FaultConditionOne(
     "AHU: Supply Air Duct Static Pressure Set Point",
 )
 
-
 _fc1_report = FaultCodeOneReport(
     VFD_SPEED_PERCENT_ERR_THRES,
     VFD_SPEED_PERCENT_MAX,
@@ -61,9 +58,7 @@ _fc1_report = FaultCodeOneReport(
     "AHU: Supply Air Duct Static Pressure Set Point",
 )
 
-
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
-
 
 start = df.head(1).index.date
 print("Dataset start: ", start)
@@ -73,7 +68,6 @@ print("Dataset end: ", end)
 
 for col in df.columns:
     print("df column: ", col, "- max len: ", df[col].size)
-    
 
 # return a whole new dataframe with fault flag as new col
 df2 = _fc1.apply(df)

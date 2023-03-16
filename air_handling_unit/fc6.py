@@ -58,7 +58,6 @@ AHU_MIN_CFM_DESIGN = 2500
 # To verify AHU is operating in Min OA OS1 & OS4 states only
 AHU_MIN_OA_DPR = 20
 
-
 _fc6 = FaultConditionSix(
     AIRFLOW_ERR_THRES,
     AHU_MIN_CFM_DESIGN,
@@ -75,7 +74,7 @@ _fc6 = FaultConditionSix(
     "heating_sig",
     "cooling_sig"
 )
-        
+
 _fc6_report = FaultCodeSixReport(
     "vav_total_flow",
     "mat",
@@ -83,7 +82,6 @@ _fc6_report = FaultCodeSixReport(
     "rat",
     "supply_vfd_speed"
 )
-
 
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
 
@@ -101,7 +99,6 @@ df2 = _fc6.apply(df)
 print(df2.head())
 print(df2.describe())
 print(df2.columns)
-
 
 document = _fc6_report.create_report(args.output, df2)
 path = os.path.join(os.path.curdir, "final_report")

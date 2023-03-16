@@ -41,7 +41,6 @@ OUTDOOR_DEGF_ERR_THRES = 5.
 MIX_DEGF_ERR_THRES = 5.
 RETURN_DEGF_ERR_THRES = 2.
 
-
 _fc2 = FaultConditionTwo(
     MIX_DEGF_ERR_THRES,
     RETURN_DEGF_ERR_THRES,
@@ -62,7 +61,6 @@ _fc2_report = FaultCodeTwoReport(
     "AHU: Supply Air Fan Speed Control Signal"
 )
 
-
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
 
 '''
@@ -81,7 +79,6 @@ print("Dataset end: ", end)
 
 for col in df.columns:
     print("df column: ", col, "- max len: ", df[col].size)
-    
 
 # return a whole new dataframe with fault flag as new col
 df2 = _fc2.apply(df)

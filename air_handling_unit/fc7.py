@@ -41,19 +41,17 @@ SAT_DEGF_ERR_THRES = 2
 _fc7 = FaultConditionSeven(
     SAT_DEGF_ERR_THRES,
     "AHU: Supply Air Temperature",
-    "AHU: Supply Air Temperature Set Point",	
+    "AHU: Supply Air Temperature Set Point",
     "AHU: Heating Coil Valve Control Signal",
     "AHU: Supply Air Fan Speed Control Signal"
 )
 
-
-_fc7_report = FaultCodeSevenReport(    
+_fc7_report = FaultCodeSevenReport(
     "AHU: Supply Air Temperature",
-    "AHU: Supply Air Temperature Set Point",	
+    "AHU: Supply Air Temperature Set Point",
     "AHU: Heating Coil Valve Control Signal",
     "AHU: Supply Air Fan Speed Control Signal"
 )
-
 
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
 
@@ -70,7 +68,6 @@ for col in df.columns:
 df2 = _fc7.apply(df)
 print(df2.head())
 print(df2.describe())
-
 
 document = _fc7_report.create_report(args.output, df2)
 path = os.path.join(os.path.curdir, "final_report")

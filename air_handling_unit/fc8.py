@@ -54,13 +54,12 @@ _fc8 = FaultConditionEight(
     "AHU: Cooling Coil Valve Control Signal"
 )
 
-_fc8_report = FaultCodeEightReport(    
+_fc8_report = FaultCodeEightReport(
     "AHU: Mixed Air Temperature",
     "AHU: Supply Air Temperature",
     "AHU: Supply Air Fan Speed Control Signal",
     "AHU: Outdoor Air Damper Control Signal"
 )
-
 
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
 
@@ -77,7 +76,6 @@ for col in df.columns:
 df2 = _fc8.apply(df)
 print(df2.head())
 print(df2.describe())
-
 
 document = _fc8_report.create_report(args.output, df2)
 path = os.path.join(os.path.curdir, "final_report")

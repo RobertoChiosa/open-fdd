@@ -43,7 +43,6 @@ DELTA_OS_MAX = 7
 # ADJUST this param for the AHU MIN OA damper stp
 AHU_MIN_OA = .20
 
-
 _fc4 = FaultConditionFour(
     DELTA_OS_MAX,
     AHU_MIN_OA,

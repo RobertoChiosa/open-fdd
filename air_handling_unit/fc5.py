@@ -35,14 +35,11 @@ args.add_argument('--no-SI-units', dest='use-SI-units', action='store_false')
 """
 args = parser.parse_args()
 
-
-
 # G36 params shouldnt need adjusting
 # °F error threshold parameters
 DELTA_T_SUPPLY_FAN = 2.
 SUPPLY_DEGF_ERR_THRES = 2.
 MIX_DEGF_ERR_THRES = 5.
-
 
 _fc5 = FaultConditionFive(
     MIX_DEGF_ERR_THRES,
@@ -54,7 +51,6 @@ _fc5 = FaultConditionFive(
     "AHU: Supply Air Fan Speed Control Signal"
 )
 
-
 _fc5_report = FaultCodeFiveReport(
     MIX_DEGF_ERR_THRES,
     SUPPLY_DEGF_ERR_THRES,
@@ -65,9 +61,7 @@ _fc5_report = FaultCodeFiveReport(
     "AHU: Supply Air Fan Speed Control Signal"
 )
 
-
 df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
-
 
 start = df.head(1).index.date
 print("Dataset start: ", start)
@@ -82,7 +76,6 @@ for col in df.columns:
 df2 = _fc5.apply(df)
 print(df2.head())
 print(df2.describe())
-
 
 document = _fc5_report.create_report(args.output, df2)
 path = os.path.join(os.path.curdir, "final_report")
