@@ -568,7 +568,7 @@ df2 = _fc12.apply(df)
 </details>
 
 <details>
-<summary>fc1.py</summary>
+<summary>fc13.py</summary>
 fc13.py - Supply air temp too high in full cooling. The strings passed into the `FaultConditionTwelve`
 and `FaultCodeTwelveReport` represent the csv file column names and required inputs for the given fault code. Applies to
 OS# 3 and OS#4.
