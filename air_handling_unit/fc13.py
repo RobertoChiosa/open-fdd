@@ -15,7 +15,7 @@ args = custom_arg_parser()
 # ADJUST this param for the AHU MIN OA damper stp
 AHU_MIN_OA = 20
 
-# G36 params shouldnt need adjusting
+# G36 params shouldn't need adjusting
 # error threshold parameters
 SAT_DEGF_ERR_THRES = 2
 

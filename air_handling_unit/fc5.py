@@ -12,7 +12,7 @@ from utils import custom_arg_parser
 # py .\fc5.py -i ./ahu_data/MZVAV-2-2.csv -o MZVAV-2-2_fc5_report
 
 args = custom_arg_parser()
-# G36 params shouldnt need adjusting
+# G36 params shouldn't need adjusting
 # °F error threshold parameters
 DELTA_T_SUPPLY_FAN = 2.
 SUPPLY_DEGF_ERR_THRES = 2.

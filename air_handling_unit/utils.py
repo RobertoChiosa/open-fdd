@@ -12,15 +12,12 @@
 # Notes:
 
 import argparse
-import os
-
-import pandas as pd
-
-from faults import FaultConditionThirteen
-from reports import FaultCodeThirteenReport
 
 
 def custom_arg_parser():
+    """
+    Parse command line arguments. Used in all py functions and war duplicated
+    """
     parser = argparse.ArgumentParser(add_help=False)
     args = parser.add_argument_group("Options")
 

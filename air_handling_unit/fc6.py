@@ -11,19 +11,19 @@ from utils import custom_arg_parser
 
 args = custom_arg_parser()
 
-# G36 params shouldnt need adjusting
+# G36 params shouldn't need adjusting
 # error threshold parameters
 OAT_DEGF_ERR_THRES = 5
 RAT_DEGF_ERR_THRES = 2
 DELTA_TEMP_MIN = 10
 AIRFLOW_ERR_THRES = .3
 
-# THIS G36 params NEEDs INPUT its for the OA
+# THIS G36 params NEEDs INPUT It's for the OA
 # ventilation setpoint. Most AHU systems will
 # not have an air flow station with a trend log avail
 # for vent setpoint but instead use a fixed OA setpoint
 # that test & balance (TAB) contractor implements at
-# building startup. Find blue print records or TAB
+# building startup. Find blueprint records or TAB
 # report for what CFM setpoint the mechanical 
 # engineer used to design the system. This param
 # will be right in the mechanical schedule for 

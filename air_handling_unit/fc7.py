@@ -12,7 +12,7 @@ from utils import custom_arg_parser
 
 args = custom_arg_parser()
 
-# G36 params shouldnt need adjusting
+# G36 params shouldn't need adjusting
 # error threshold parameters
 SAT_DEGF_ERR_THRES = 2
 

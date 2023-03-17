@@ -13,7 +13,7 @@ from utils import custom_arg_parser
 
 args = custom_arg_parser()
 
-# G36 params shouldnt need adjusting
+# G36 params shouldn't need adjusting
 # error threshold parameters
 DELTA_SUPPLY_FAN = 2
 OAT_DEGF_ERR_THRES = 5

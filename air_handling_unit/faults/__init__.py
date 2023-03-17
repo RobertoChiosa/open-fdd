@@ -1,6 +1,7 @@
 import operator
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 
 
 class FaultConditionOne:
@@ -395,9 +396,9 @@ class FaultConditionEight:
 
     def __init__(
             self,
-            delta_supply_fan: str,
-            mix_err_thres: str,
-            supply_err_thres: str,
+            delta_supply_fan: float,
+            mix_err_thres: float,
+            supply_err_thres: float,
             ahu_min_oa: float,
             mat_col: str,
             sat_col: str,
