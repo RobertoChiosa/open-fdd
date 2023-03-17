@@ -60,11 +60,11 @@ class PDF(FPDF):
         # Line break
         self.ln()
 
-    def add_run(self, list):
+    def add_run(self, items_list):
         # Read text file
         # Times 12
         self.set_font('Helvetica', '', 11)
-        for item in list:
+        for item in items_list:
             # Output justified text
             self.cell(0, 5, "   " + item)
             self.ln()
@@ -85,7 +85,8 @@ if __name__ == '__main__':
     pdf.add_page()
     pdf.add_heading(1, 'Fault definition')
     pdf.add_paragraph(
-        """Fault condition one of ASHRAE Guideline 36 is related to flagging poor performance of a AHU variable supply fan attempting to control to a duct pressure setpoint. Fault condition equation as defined by  ASHRAE:"""
+        """Fault condition one of ASHRAE Guideline 36 is related to flagging poor performance of a AHU variable 
+        supply fan attempting to control to a duct pressure setpoint. Fault condition equation as defined by  ASHRAE:"""
     )
 
     # add image
@@ -101,4 +102,4 @@ if __name__ == '__main__':
 
     # pdf.print_chapter(1, 'A RUNAWAY REEF', '20k_c1.txt')
     # pdf.print_chapter(2, 'THE PROS AND CONS', '20k_c2.txt')
-    pdf.output('../final_report/tutorial_pdf.pdf', 'F')
+    pdf.output(name='../final_report/tutorial_pdf.pdf', dest='F')

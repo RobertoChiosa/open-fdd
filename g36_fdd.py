@@ -1,11 +1,11 @@
 # import argparse
 import os
 
+import click
 import pandas as pd
 
 from air_handling_unit.faults import FaultConditionOne, FaultConditionTwo
 from air_handling_unit.reports import FaultCodeOneReport, FaultCodeTwoReport
-import click
 
 
 # python 3.10 on Windows 10

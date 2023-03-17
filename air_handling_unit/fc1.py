@@ -14,46 +14,47 @@ from utils import custom_arg_parser, save_report
 # python ./fc1.py -i ./ahu_data/MZVAV-2-1.csv -o MZVAV-2-1_fc1_report
 # python ./fc1.py -i ./ahu_data/MZVAV-2-2.csv -o MZVAV-2-2_fc1_report
 
-args = custom_arg_parser()
+if __name__ == '__main__':
+    args = custom_arg_parser()
 
-# G36 params shouldn't need adjusting
-# error threshold parameters
-VFD_SPEED_PERCENT_ERR_THRES = 0.05
-VFD_SPEED_PERCENT_MAX = 0.99
-DUCT_STATIC_INCHES_ERR_THRES = 0.1
+    # G36 params shouldn't need adjusting
+    # error threshold parameters
+    VFD_SPEED_PERCENT_ERR_THRES = 0.05
+    VFD_SPEED_PERCENT_MAX = 0.99
+    DUCT_STATIC_INCHES_ERR_THRES = 0.1
 
-_fc1 = FaultConditionOne(
-    VFD_SPEED_PERCENT_ERR_THRES,
-    VFD_SPEED_PERCENT_MAX,
-    DUCT_STATIC_INCHES_ERR_THRES,
-    "AHU: Supply Air Duct Static Pressure",
-    "AHU: Supply Air Fan Speed Control Signal",
-    "AHU: Supply Air Duct Static Pressure Set Point",
-)
+    _fc1 = FaultConditionOne(
+        VFD_SPEED_PERCENT_ERR_THRES,
+        VFD_SPEED_PERCENT_MAX,
+        DUCT_STATIC_INCHES_ERR_THRES,
+        "AHU: Supply Air Duct Static Pressure",
+        "AHU: Supply Air Fan Speed Control Signal",
+        "AHU: Supply Air Duct Static Pressure Set Point",
+    )
 
-_fc1_report = FaultCodeOneReport(
-    VFD_SPEED_PERCENT_ERR_THRES,
-    VFD_SPEED_PERCENT_MAX,
-    DUCT_STATIC_INCHES_ERR_THRES,
-    "AHU: Supply Air Duct Static Pressure",
-    "AHU: Supply Air Fan Speed Control Signal",
-    "AHU: Supply Air Duct Static Pressure Set Point",
-)
+    _fc1_report = FaultCodeOneReport(
+        VFD_SPEED_PERCENT_ERR_THRES,
+        VFD_SPEED_PERCENT_MAX,
+        DUCT_STATIC_INCHES_ERR_THRES,
+        "AHU: Supply Air Duct Static Pressure",
+        "AHU: Supply Air Fan Speed Control Signal",
+        "AHU: Supply Air Duct Static Pressure Set Point",
+    )
 
-df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
+    df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling('5T').mean()
 
-start = df.head(1).index.date
-print("Dataset start: ", start)
+    start = df.head(1).index.date
+    print("Dataset start: ", start)
 
-end = df.tail(1).index.date
-print("Dataset end: ", end)
+    end = df.tail(1).index.date
+    print("Dataset end: ", end)
 
-for col in df.columns:
-    print("df column: ", col, "- max len: ", df[col].size)
+    for col in df.columns:
+        print("df column: ", col, "- max len: ", df[col].size)
 
-# return a whole new dataframe with fault flag as new col
-df2 = _fc1.apply(df)
-print(df2.head())
-print(df2.describe())
+    # return a whole new dataframe with fault flag as new col
+    df2 = _fc1.apply(df)
+    print(df2.head())
+    print(df2.describe())
 
-save_report(args, df, _fc1_report)
+    save_report(args, df, _fc1_report)

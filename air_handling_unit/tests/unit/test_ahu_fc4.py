@@ -1,8 +1,10 @@
-from faults import FaultConditionFour
+import datetime
 import random
+
 import pandas as pd
 import pytest
-import datetime
+
+from air_handling_unit.faults import FaultConditionFour
 
 '''
 to see print statements in pytest run with
@@ -16,7 +18,6 @@ every time for the flag mean col output.
 Future compare to ML FDD Vs rule based FDD
 '''
 
-
 DELTA_OS_MAX = 7
 AHU_MIN_OA = .20
 TEST_MIX_AIR_DAMPER_COL = "economizer_sig_col"
@@ -26,6 +27,7 @@ TEST_SUPPLY_VFD_SPEED_COL = "fan_vfd_speed_col"
 
 DATASET_ROWS = 1000
 
+
 def generate_timestamp() -> pd.Series:
     df = pd.DataFrame()
     date_range = pd.period_range(
@@ -33,23 +35,24 @@ def generate_timestamp() -> pd.Series:
     df['Date'] = [x.to_timestamp() for x in date_range]
     return df['Date']
 
+
 # mix air temp higher than out temp
 def fail_row() -> dict:
     data = {
-        TEST_MIX_AIR_DAMPER_COL : .6,
-        TEST_HEATING_COIL_SIG_COL : 0,
-        TEST_COOLING_COIL_SIG_COL : .6,
-        TEST_SUPPLY_VFD_SPEED_COL : .8,
+        TEST_MIX_AIR_DAMPER_COL: .6,
+        TEST_HEATING_COIL_SIG_COL: 0,
+        TEST_COOLING_COIL_SIG_COL: .6,
+        TEST_SUPPLY_VFD_SPEED_COL: .8,
     }
     return data
 
 
 def pass_row() -> dict:
     data = {
-        TEST_MIX_AIR_DAMPER_COL : 0,
-        TEST_HEATING_COIL_SIG_COL : 0,
-        TEST_COOLING_COIL_SIG_COL : .6,
-        TEST_SUPPLY_VFD_SPEED_COL : .8,
+        TEST_MIX_AIR_DAMPER_COL: 0,
+        TEST_HEATING_COIL_SIG_COL: 0,
+        TEST_COOLING_COIL_SIG_COL: .6,
+        TEST_SUPPLY_VFD_SPEED_COL: .8,
     }
     return data
 
@@ -77,14 +80,14 @@ def passing_df() -> pd.DataFrame:
 
 def test_failing(failing_df):
     fc4 = FaultConditionFour(
-    DELTA_OS_MAX,
-    AHU_MIN_OA,
-    TEST_MIX_AIR_DAMPER_COL,
-    TEST_HEATING_COIL_SIG_COL,
-    TEST_COOLING_COIL_SIG_COL,
-    TEST_SUPPLY_VFD_SPEED_COL,
+        DELTA_OS_MAX,
+        AHU_MIN_OA,
+        TEST_MIX_AIR_DAMPER_COL,
+        TEST_HEATING_COIL_SIG_COL,
+        TEST_COOLING_COIL_SIG_COL,
+        TEST_SUPPLY_VFD_SPEED_COL,
     )
-    
+
     failing_df = failing_df.set_index(generate_timestamp())
     results = fc4.apply(failing_df)
     actual = results["fc4_flag"].sum()
@@ -93,22 +96,20 @@ def test_failing(failing_df):
     assert actual == pytest.approx(expected), message
 
 
-
 def test_passing(passing_df):
     fc4 = FaultConditionFour(
-    DELTA_OS_MAX,
-    AHU_MIN_OA,
-    TEST_MIX_AIR_DAMPER_COL,
-    TEST_HEATING_COIL_SIG_COL,
-    TEST_COOLING_COIL_SIG_COL,
-    TEST_SUPPLY_VFD_SPEED_COL,
-    TEST_SUPPLY_VFD_SPEED_COL,
+        DELTA_OS_MAX,
+        AHU_MIN_OA,
+        TEST_MIX_AIR_DAMPER_COL,
+        TEST_HEATING_COIL_SIG_COL,
+        TEST_COOLING_COIL_SIG_COL,
+        TEST_SUPPLY_VFD_SPEED_COL,
+        TEST_SUPPLY_VFD_SPEED_COL,
     )
-    
+
     passing_df = passing_df.set_index(generate_timestamp())
     results = fc4.apply(passing_df)
     actual = results["fc4_flag"].sum()
     expected = 16.
     message = f"fc4 PASS actual is {actual} and expected is {expected}"
     assert actual == pytest.approx(expected), message
-

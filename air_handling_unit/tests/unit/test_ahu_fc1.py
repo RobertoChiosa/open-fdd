@@ -1,7 +1,9 @@
-from faults import FaultConditionOne
 import random
+
 import pandas as pd
 import pytest
+
+from air_handling_unit.faults import FaultConditionOne
 
 '''
 to see print statements in pytest run with
