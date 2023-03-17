@@ -1,38 +1,17 @@
-import argparse
 import os
 
 import pandas as pd
 
 from faults import FaultConditionTwelve
 from reports import FaultCodeTwelveReport
+from utils import custom_arg_parser
 
 # python 3.10 on Windows 10
 # py .\fc12.py -i ./ahu_data/MZVAV-1.csv -o MZVAV-1_fc12_report
 # py .\fc12.py -i ./ahu_data/MZVAV-2-1.csv -o MZVAV-2-1_fc12_report
 # py .\fc12.py -i ./ahu_data/MZVAV-2-2.csv -o MZVAV-2-2_fc12_report
 
-parser = argparse.ArgumentParser(add_help=False)
-args = parser.add_argument_group("Options")
-
-args.add_argument(
-    "-h", "--help", action="help", help="Show this help message and exit."
-)
-args.add_argument("-i", "--input", required=True, type=str, help="CSV File Input")
-args.add_argument(
-    "-o", "--output", required=True, type=str, help="Word File Output Name"
-)
-"""
-FUTURE 
- * incorporate an arg for SI units 
- * °C on temp sensors
- * piping pressure sensor PSI conversion
- * air flow CFM conversion
- * AHU duct static pressure "WC
-
-args.add_argument('--use-SI-units', default=False, action='store_true')
-args.add_argument('--no-SI-units', dest='use-SI-units', action='store_false')
-"""
-args = parser.parse_args()
+args = custom_arg_parser()
 
 # ADJUST this param for the AHU MIN OA damper stp
 AHU_MIN_OA = 20

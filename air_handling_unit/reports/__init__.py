@@ -1,29 +1,33 @@
-import math
+# import math
 import os
 import time
 from io import BytesIO
-import numpy as np
+# import numpy as np
 
-import matplotlib.patches as mpatches
+# import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import pandas as pd
 from docx import Document
 from docx.shared import Inches
 
-from faults import FaultConditionOne
+# from faults import FaultConditionOne
 
+# todo: add default document style
+
+# create a document style
+# https://python-docx.readthedocs.io/en/latest/user/styles-understanding.html
 
 class FaultCodeOneReport:
     """Class provides the definitions for Fault Code 1 Report."""
 
     def __init__(
-        self,
-        vfd_speed_percent_err_thres: float,
-        vfd_speed_percent_max: float,
-        duct_static_inches_err_thres: float,
-        duct_static_col: str,
-        supply_vfd_speed_col: str,
-        duct_static_setpoint_col: str,
+            self,
+            vfd_speed_percent_err_thres: float,
+            vfd_speed_percent_max: float,
+            duct_static_inches_err_thres: float,
+            duct_static_col: str,
+            supply_vfd_speed_col: str,
+            duct_static_setpoint_col: str,
     ):
         self.vfd_speed_percent_err_thres = vfd_speed_percent_err_thres
         self.vfd_speed_percent_max = vfd_speed_percent_max
@@ -95,7 +99,7 @@ class FaultCodeOneReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame, output_col: str = None, duct_static_col: str = None
+            self, df: pd.DataFrame, output_col: str = None, duct_static_col: str = None
     ) -> plt:
         if output_col is None:
             output_col = "fc1_flag"
@@ -113,10 +117,10 @@ class FaultCodeOneReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -127,7 +131,9 @@ class FaultCodeOneReport:
         document.add_heading("Fault Condition One Report", 0)
 
         p = document.add_paragraph(
-            """Fault condition one of ASHRAE Guideline 36 is related to flagging poor performance of a AHU variable supply fan attempting to control to a duct pressure setpoint. Fault condition equation as defined by ASHRAE:"""
+            """Fault condition one of ASHRAE Guideline 36 is related to flagging poor performance of a AHU variable 
+            supply fan attempting to control to a duct pressure setpoint. Fault condition equation as defined by 
+            ASHRAE:"""
         )
 
         document.add_picture(
@@ -192,11 +198,11 @@ class FaultCodeOneReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building "
+                f"fuel use through HVAC"
             )
 
         paragraph = document.add_paragraph()
@@ -259,12 +265,14 @@ class FaultCodeOneReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                "The percent True metric that represents the amount of time for when the fault flag is True is high indicating the fan is running at high speeds and appearing to not generate good duct static pressure"
+                "The percent True metric that represents the amount of time for when the fault flag is True is high "
+                "indicating the fan is running at high speeds and appearing to not generate good duct static pressure"
             )
 
         else:
             paragraph.add_run(
-                "The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the fan appears to generate good duct static pressure"
+                "The percent True metric that represents the amount of time for when the fault flag is True is low "
+                "inidicating the fan appears to generate good duct static pressure"
             )
 
         paragraph = document.add_paragraph()
@@ -272,7 +280,8 @@ class FaultCodeOneReport:
 
         if df[self.duct_static_setpoint_col].std() < 0.1:
             paragraph.add_run(
-                "No duct static pressure setpoint reset detected consider implementing a reset strategy to save AHU fan energy ")
+                "No duct static pressure setpoint reset detected consider implementing a reset strategy to save AHU "
+                "fan energy ")
 
         else:
             paragraph.add_run("Duct pressure reset detected (Good)")
@@ -287,14 +296,14 @@ class FaultCodeTwoReport:
     """Class provides the definitions for Fault Code 2 Report."""
 
     def __init__(
-        self,
-        mix_degf_err_thres: float,
-        return_degf_err_thres: float,
-        outdoor_degf_err_thres: float,
-        mat_col: str,
-        rat_col: str,
-        oat_col: str,
-        fan_vfd_speed_col: str,
+            self,
+            mix_degf_err_thres: float,
+            return_degf_err_thres: float,
+            outdoor_degf_err_thres: float,
+            mat_col: str,
+            rat_col: str,
+            oat_col: str,
+            fan_vfd_speed_col: str,
     ):
         self.mix_degf_err_thres = mix_degf_err_thres
         self.return_degf_err_thres = return_degf_err_thres
@@ -377,9 +386,9 @@ class FaultCodeTwoReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        mat_col: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            mat_col: str = None
     ) -> plt:
 
         if output_col is None:
@@ -400,10 +409,10 @@ class FaultCodeTwoReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -414,7 +423,11 @@ class FaultCodeTwoReport:
         document.add_heading("Fault Condition Two Report", 0)
 
         p = document.add_paragraph(
-            """Fault condition two and three of ASHRAE Guideline 36 is related to flagging mixing air temperatures of the AHU that are out of acceptable ranges. Fault condition 2 flags mixing air temperatures that are too low and fault condition 3 flags mixing temperatures that are too high when in comparision to return and outside air data. The mixing air temperatures in theory should always be in between the return and outside air temperatures ranges. Fault condition two equation as defined by ASHRAE:"""
+            """Fault condition two and three of ASHRAE Guideline 36 is related to flagging mixing air temperatures of 
+            the AHU that are out of acceptable ranges. Fault condition 2 flags mixing air temperatures that are too 
+            low and fault condition 3 flags mixing temperatures that are too high when in comparision to return and 
+            outside air data. The mixing air temperatures in theory should always be in between the return and 
+            outside air temperatures ranges. Fault condition two equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -483,11 +496,11 @@ class FaultCodeTwoReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building "
+                f"fuel use through HVAC"
             )
 
         paragraph = document.add_paragraph()
@@ -563,14 +576,14 @@ class FaultCodeThreeReport:
     """Class provides the definitions for Fault Code 3 Report."""
 
     def __init__(
-        self,
-        mix_degf_err_thres: float,
-        return_degf_err_thres: float,
-        outdoor_degf_err_thres: float,
-        mat_col: str,
-        rat_col: str,
-        oat_col: str,
-        fan_vfd_speed_col: str,
+            self,
+            mix_degf_err_thres: float,
+            return_degf_err_thres: float,
+            outdoor_degf_err_thres: float,
+            mat_col: str,
+            rat_col: str,
+            oat_col: str,
+            fan_vfd_speed_col: str,
     ):
         self.mix_degf_err_thres = mix_degf_err_thres
         self.return_degf_err_thres = return_degf_err_thres
@@ -655,9 +668,9 @@ class FaultCodeThreeReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        mat_col: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            mat_col: str = None
     ) -> plt:
 
         if output_col is None:
@@ -678,10 +691,10 @@ class FaultCodeThreeReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -761,7 +774,6 @@ class FaultCodeThreeReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
@@ -908,7 +920,7 @@ class FaultCodeFourReport:
         total_hours_all_data = delta_all_data.sum() / pd.Timedelta(hours=1)
 
         hours_fc4_mode = (
-            delta_all_data * df[output_col]).sum() / pd.Timedelta(hours=1)
+                                 delta_all_data * df[output_col]).sum() / pd.Timedelta(hours=1)
 
         percent_true_fc4 = round(df.fc4_flag.mean() * 100, 2)
         percent_false_fc4 = round((100 - percent_true_fc4), 2)
@@ -917,7 +929,7 @@ class FaultCodeFourReport:
         delta_heating = df[self.heating_mode_calc_col].index.to_series(
         ).diff()
         total_hours_heating = (
-            delta_heating * df[self.heating_mode_calc_col]).sum() / pd.Timedelta(hours=1)
+                                      delta_heating * df[self.heating_mode_calc_col]).sum() / pd.Timedelta(hours=1)
 
         percent_heating = round(
             df[self.heating_mode_calc_col].mean() * 100, 2)
@@ -926,7 +938,7 @@ class FaultCodeFourReport:
         delta_econ = df[self.econ_only_cooling_mode_calc_col].index.to_series(
         ).diff()
         total_hours_econ = (
-            delta_econ * df[self.econ_only_cooling_mode_calc_col]).sum() / pd.Timedelta(hours=1)
+                                   delta_econ * df[self.econ_only_cooling_mode_calc_col]).sum() / pd.Timedelta(hours=1)
 
         percent_econ = round(
             df[self.econ_only_cooling_mode_calc_col].mean() * 100, 2)
@@ -936,7 +948,8 @@ class FaultCodeFourReport:
         ).diff()
 
         total_hours_econ_clg = (
-            delta_econ_clg * df[self.econ_plus_mech_cooling_mode_calc_col]).sum() / pd.Timedelta(hours=1)
+                                       delta_econ_clg * df[
+                                   self.econ_plus_mech_cooling_mode_calc_col]).sum() / pd.Timedelta(hours=1)
 
         percent_econ_clg = round(
             df[self.econ_plus_mech_cooling_mode_calc_col].mean() * 100, 2)
@@ -946,7 +959,7 @@ class FaultCodeFourReport:
         ).diff()
 
         total_hours_clg = (
-            delta_clg * df[self.mech_cooling_only_mode_calc_col]).sum() / pd.Timedelta(hours=1)
+                                  delta_clg * df[self.mech_cooling_only_mode_calc_col]).sum() / pd.Timedelta(hours=1)
 
         percent_clg = round(
             df[self.mech_cooling_only_mode_calc_col].mean() * 100, 2)
@@ -968,8 +981,8 @@ class FaultCodeFourReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
+            self, df: pd.DataFrame,
+            output_col: str = None,
     ) -> plt:
 
         if output_col is None:
@@ -987,10 +1000,10 @@ class FaultCodeFourReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
         if output_col is None:
             output_col = "fc4_flag"
@@ -1162,14 +1175,14 @@ class FaultCodeFiveReport:
     """Class provides the definitions for Fault Code 5 Report."""
 
     def __init__(
-        self,
-        mix_degf_err_thres: float,
-        supply_degf_err_thres: float,
-        delta_t_supply_fan: float,
-        mat_col: str,
-        sat_col: str,
-        htg_vlv_col: str,
-        fan_vfd_speed_col: str
+            self,
+            mix_degf_err_thres: float,
+            supply_degf_err_thres: float,
+            delta_t_supply_fan: float,
+            mat_col: str,
+            sat_col: str,
+            htg_vlv_col: str,
+            fan_vfd_speed_col: str
     ):
         self.mix_degf_err_thres = mix_degf_err_thres
         self.supply_degf_err_thres = supply_degf_err_thres
@@ -1251,9 +1264,9 @@ class FaultCodeFiveReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        mat_col: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            mat_col: str = None
     ) -> plt:
 
         if output_col is None:
@@ -1274,10 +1287,10 @@ class FaultCodeFiveReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -1357,7 +1370,6 @@ class FaultCodeFiveReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
@@ -1430,12 +1442,12 @@ class FaultCodeSixReport:
     """Class provides the definitions for Fault Code 5 Report."""
 
     def __init__(
-        self,
-        vav_total_flow_col: str,
-        mat_col: str,
-        oat_col: str,
-        rat_col: str,
-        fan_vfd_speed_col: str
+            self,
+            vav_total_flow_col: str,
+            mat_col: str,
+            oat_col: str,
+            rat_col: str,
+            fan_vfd_speed_col: str
     ):
         self.vav_total_flow_col = vav_total_flow_col
         self.fan_vfd_speed_col = fan_vfd_speed_col
@@ -1531,9 +1543,9 @@ class FaultCodeSixReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        vav_total_flow: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            vav_total_flow: str = None
     ) -> plt:
 
         if output_col is None:
@@ -1551,10 +1563,10 @@ class FaultCodeSixReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -1634,7 +1646,6 @@ class FaultCodeSixReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
@@ -1686,13 +1697,13 @@ class FaultCodeSixReport:
         paragraph = document.add_paragraph()
         paragraph.style = 'List Bullet'
         paragraph.add_run(str(df_motor_on_filtered[self.oat_col].describe()))
-        
+
         # ADD in Summary Statistics
         document.add_heading('Return Temp', level=3)
         paragraph = document.add_paragraph()
         paragraph.style = 'List Bullet'
         paragraph.add_run(str(df_motor_on_filtered[self.rat_col].describe()))
-        
+
         # ADD in Summary Statistics
         document.add_heading('Total Air Flow', level=3)
         paragraph = document.add_paragraph()
@@ -1723,11 +1734,11 @@ class FaultCodeSevenReport:
     """
 
     def __init__(
-        self,
-        sat_col: str,
-        satsp_col: str,
-        htg_col: str,
-        fan_vfd_speed_col: str
+            self,
+            sat_col: str,
+            satsp_col: str,
+            htg_col: str,
+            fan_vfd_speed_col: str
     ):
         self.sat_col = sat_col
         self.satsp_col = satsp_col
@@ -1803,9 +1814,9 @@ class FaultCodeSevenReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        vav_total_flow: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            vav_total_flow: str = None
     ) -> plt:
 
         if output_col is None:
@@ -1823,10 +1834,10 @@ class FaultCodeSevenReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -1906,7 +1917,6 @@ class FaultCodeSevenReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
@@ -1987,11 +1997,11 @@ class FaultCodeEightReport:
     """Class provides the definitions for Fault Code 12 Report."""
 
     def __init__(
-        self,
-        sat_col: str,
-        mat_col: str,
-        fan_vfd_speed_col: str,
-        economizer_sig_col: str,
+            self,
+            sat_col: str,
+            mat_col: str,
+            fan_vfd_speed_col: str,
+            economizer_sig_col: str,
     ):
         self.sat_col = sat_col
         self.mat_col = mat_col
@@ -2062,9 +2072,9 @@ class FaultCodeEightReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        vav_total_flow: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            vav_total_flow: str = None
     ) -> plt:
 
         if output_col is None:
@@ -2082,10 +2092,10 @@ class FaultCodeEightReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -2165,7 +2175,6 @@ class FaultCodeEightReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
@@ -2238,11 +2247,11 @@ class FaultCodeNineReport:
     """Class provides the definitions for Fault Code 9 Report."""
 
     def __init__(
-        self,
-        satsp_col: str,
-        oat_col: str,
-        fan_vfd_speed_col: str,
-        economizer_sig_col: str,
+            self,
+            satsp_col: str,
+            oat_col: str,
+            fan_vfd_speed_col: str,
+            economizer_sig_col: str,
     ):
 
         self.satsp_col = satsp_col
@@ -2314,9 +2323,9 @@ class FaultCodeNineReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        vav_total_flow: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            vav_total_flow: str = None
     ) -> plt:
 
         if output_col is None:
@@ -2334,10 +2343,10 @@ class FaultCodeNineReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -2417,7 +2426,6 @@ class FaultCodeNineReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
@@ -2492,12 +2500,12 @@ class FaultCodeTenReport:
     """Class provides the definitions for Fault Code 10 Report."""
 
     def __init__(
-        self,
-        oat_col: str,
-        mat_col: str,
-        clg_col: str,
-        economizer_sig_col: str,
-        fan_vfd_speed_col: str,
+            self,
+            oat_col: str,
+            mat_col: str,
+            clg_col: str,
+            economizer_sig_col: str,
+            fan_vfd_speed_col: str,
     ):
         self.oat_col = oat_col
         self.mat_col = mat_col
@@ -2577,9 +2585,9 @@ class FaultCodeTenReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        vav_total_flow: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            vav_total_flow: str = None
     ) -> plt:
 
         if output_col is None:
@@ -2597,10 +2605,10 @@ class FaultCodeTenReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -2679,7 +2687,6 @@ class FaultCodeTenReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
@@ -2738,7 +2745,7 @@ class FaultCodeTenReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating temperature sensor error or the mixing air dampers are stuck or broken with the inability for the AHU to go into a proper 100 percent outside air mode. If the outside air temperature is a global variable on the BAS verify (IE, installed to the boiler plant controller and then shared via supervisory level logic on the BAS to the AHU controllers on the BAS network) that where the actual OA temperature is installed that is on the North side of the building in the shade. On the AHU verify mix temperature sensor calibration and that the mixing dampers have good proper rotation with good seals when in the closed position. When testing AHU systems operating in a 100 percent outside air mode it could be worth verifying exhaust systems or return fans are operating properly. In thoery if alot of air is being pumped into the building and it is allowed to be exhaust or relieved properly, a balanced building will not have any issues of closing or opening egress doors to the building due to excess positive building pressure.')
+                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating temperature sensor error or the mixing air dampers are stuck or broken with the inability for the AHU to go into a proper 100 percent outside air mode. If the outside air temperature is a global variable on the BAS verify (IE, installed to the boiler plant controller and then shared via supervisory level logic on the BAS to the AHU controllers on the BAS network) that where the actual OA temperature is installed that is on the North side of the building in the shade. On the AHU verify mix temperature sensor calibration and that the mixing dampers have good proper rotation with good seals when in the closed position. When testing AHU systems operating in a 100 percent outside air mode it could be worth verifying exhaust systems or return fans are operating properly. In theory if alot of air is being pumped into the building and it is allowed to be exhaust or relieved properly, a balanced building will not have any issues of closing or opening egress doors to the building due to excess positive building pressure.')
 
         else:
             paragraph.add_run(
@@ -2754,12 +2761,12 @@ class FaultCodeElevenReport:
     """Class provides the definitions for Fault Code 11 Report."""
 
     def __init__(
-        self,
-        sat_sp_col: str,
-        oat_col: str,
-        clg_col: str,
-        economizer_sig_col: str,
-        fan_vfd_speed_col: str,
+            self,
+            sat_sp_col: str,
+            oat_col: str,
+            clg_col: str,
+            economizer_sig_col: str,
+            fan_vfd_speed_col: str,
     ):
         self.sat_sp_col = sat_sp_col
         self.oat_col = oat_col
@@ -2839,9 +2846,9 @@ class FaultCodeElevenReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        vav_total_flow: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            vav_total_flow: str = None
     ) -> plt:
 
         if output_col is None:
@@ -2859,10 +2866,10 @@ class FaultCodeElevenReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -2942,7 +2949,6 @@ class FaultCodeElevenReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
@@ -3002,7 +3008,7 @@ class FaultCodeElevenReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating temperature sensor error or the heating coil could be leaking potentially creating simultenious heating/cooling scenorio which can be an energy penalty for running the AHU in this fashion. Also visually verify with the AHU off via lock-out-tag-out that the mixing dampers operates effectively. To do this have one person the BAS sending operator override commands to drive the damper back and forth. The other person should put on eyes on the operation of the actuator motor driving the OA dampers 100 percent open and then closed and visually verify the dampers rotate effectively per BAS command where to also visually verify the dampers have a good seal when in the closed position. Also consider looking into BAS programming that may need tuning or parameter adjustments for the staging between OS state changes between AHU modes of operation.')
+                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating temperature sensor error or the heating coil could be leaking potentially creating simultaneous heating/cooling scenario which can be an energy penalty for running the AHU in this fashion. Also visually verify with the AHU off via lock-out-tag-out that the mixing dampers operates effectively. To do this have one person the BAS sending operator override commands to drive the damper back and forth. The other person should put on eyes on the operation of the actuator motor driving the OA dampers 100 percent open and then closed and visually verify the dampers rotate effectively per BAS command where to also visually verify the dampers have a good seal when in the closed position. Also consider looking into BAS programming that may need tuning or parameter adjustments for the staging between OS state changes between AHU modes of operation.')
         else:
             paragraph.add_run(
                 'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the AHU components are within calibration for this fault equation Ok.')
@@ -3017,12 +3023,12 @@ class FaultCodeTwelveReport:
     """Class provides the definitions for Fault Code 12 Report."""
 
     def __init__(
-        self,
-        sat_col: str,
-        mat_col: str,
-        clg_col: str,
-        economizer_sig_col: str,
-        fan_vfd_speed_col: str,
+            self,
+            sat_col: str,
+            mat_col: str,
+            clg_col: str,
+            economizer_sig_col: str,
+            fan_vfd_speed_col: str,
     ):
         self.sat_col = sat_col
         self.mat_col = mat_col
@@ -3102,9 +3108,9 @@ class FaultCodeTwelveReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        vav_total_flow: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            vav_total_flow: str = None
     ) -> plt:
 
         if output_col is None:
@@ -3122,10 +3128,10 @@ class FaultCodeTwelveReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -3205,7 +3211,6 @@ class FaultCodeTwelveReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
@@ -3281,12 +3286,12 @@ class FaultCodeThirteenReport:
     """
 
     def __init__(
-        self,
-        sat_col: str,
-        satsp_col: str,
-        clg_col: str,
-        economizer_sig_col: str,
-        fan_vfd_speed_col: str
+            self,
+            sat_col: str,
+            satsp_col: str,
+            clg_col: str,
+            economizer_sig_col: str,
+            fan_vfd_speed_col: str
     ):
         self.sat_col = sat_col
         self.satsp_col = satsp_col
@@ -3366,9 +3371,9 @@ class FaultCodeThirteenReport:
         )
 
     def create_hist_plot(
-        self, df: pd.DataFrame,
-        output_col: str = None,
-        vav_total_flow: str = None
+            self, df: pd.DataFrame,
+            output_col: str = None,
+            vav_total_flow: str = None
     ) -> plt:
 
         if output_col is None:
@@ -3386,10 +3391,10 @@ class FaultCodeThirteenReport:
         return fig
 
     def create_report(
-        self,
-        path: str,
-        df: pd.DataFrame,
-        output_col: str = None
+            self,
+            path: str,
+            df: pd.DataFrame,
+            output_col: str = None
     ) -> None:
 
         if output_col is None:
@@ -3469,7 +3474,6 @@ class FaultCodeThirteenReport:
         )
 
         if int(total_hours) == int(hours_motor_runtime):
-
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(

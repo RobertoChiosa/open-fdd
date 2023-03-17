@@ -3,8 +3,8 @@ import os
 
 import pandas as pd
 
-from faults import FaultConditionOne, FaultConditionTwo
-from reports import FaultCodeOneReport, FaultCodeTwoReport
+from air_handling_unit.faults import FaultConditionOne, FaultConditionTwo
+from air_handling_unit.reports import FaultCodeOneReport, FaultCodeTwoReport
 import click
 
 
@@ -52,14 +52,14 @@ def cli(debug):
     help="VFD Speed Column Name",
 )
 def check_fault_one(
-    input,
-    output,
-    vfd_speed_percent_err_thres,
-    vfd_speed_percent_max,
-    duct_static_inches_err_thres,
-    duct_static_col,
-    duct_static_setpoint_col,
-    vfd_speed_col,
+        input,
+        output,
+        vfd_speed_percent_err_thres,
+        vfd_speed_percent_max,
+        duct_static_inches_err_thres,
+        duct_static_col,
+        duct_static_setpoint_col,
+        vfd_speed_col,
 ):
     """
     FUTURE
@@ -124,15 +124,14 @@ def check_fault_one(
 @click.option("--outdoor-temp-f-col", default="oat", type=str, help="Outdoor DegF Column Name")
 @click.option("--mix-temp-f-col", default="mat", type=str, help="Mix DegF Column Name")
 @click.option("--return-temp-f-col", default="rat", type=str, help="Return DegF Column Name")
-def check_fault_two(input, 
-                    output, 
-                    outdoor_degf_err_thres, 
-                    mix_degf_err_thres, 
-                    return_degf_err_thres, 
-                    outdoor_temp_f_col, 
-                    mix_temp_f_col, 
+def check_fault_two(input,
+                    output,
+                    outdoor_degf_err_thres,
+                    mix_degf_err_thres,
+                    return_degf_err_thres,
+                    outdoor_temp_f_col,
+                    mix_temp_f_col,
                     return_temp_f_col):
-    
     """
     FUTURE 
     * incorporate an arg for SI units 
@@ -184,8 +183,6 @@ def check_fault_two(input,
     if not os.path.exists(path):
         os.makedirs(path)
     document.save(os.path.join(path, f"{output}.docx"))
-
-
 
 
 if __name__ == "__main__":
