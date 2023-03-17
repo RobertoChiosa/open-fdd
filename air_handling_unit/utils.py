@@ -13,6 +13,8 @@
 
 import argparse
 
+import os
+
 
 def custom_arg_parser():
     """
@@ -41,3 +43,11 @@ def custom_arg_parser():
     """
     args = parser.parse_args()
     return args
+
+
+def save_report(args, df, report):
+    document = report.create_report(args.output, df)
+    path = os.path.join(os.path.curdir, "final_report")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    document.save(os.path.join(path, f"{args.output}.docx"))

@@ -1,14 +1,13 @@
-import os
-
 import pandas as pd
 
 from faults import FaultConditionEight
 from reports import FaultCodeEightReport
+from utils import custom_arg_parser, save_report
+
 # python 3.10 on Windows 10
 # py .\fc8.py -i ./ahu_data/MZVAV-1.csv -o MZVAV-1_fc8_report
 # py .\fc8.py -i ./ahu_data/MZVAV-2-1.csv -o MZVAV-2-1_fc8_report
 # py .\fc8.py -i ./ahu_data/MZVAV-2-2.csv -o MZVAV-2-2_fc8_report
-from utils import custom_arg_parser
 
 args = custom_arg_parser()
 
@@ -54,9 +53,4 @@ for col in df.columns:
 df2 = _fc8.apply(df)
 print(df2.head())
 print(df2.describe())
-
-document = _fc8_report.create_report(args.output, df2)
-path = os.path.join(os.path.curdir, "final_report")
-if not os.path.exists(path):
-    os.makedirs(path)
-document.save(os.path.join(path, f"{args.output}.docx"))
+save_report(args, df, _fc8_report)

@@ -1,10 +1,8 @@
-import os
-
 import pandas as pd
 
 from faults import FaultConditionTwo
 from reports import FaultCodeTwoReport
-from utils import custom_arg_parser
+from utils import custom_arg_parser, save_report
 
 # python 3.10 on Windows 10
 # py .\fc2.py -i ./ahu_data/MZVAV-1.csv -o MZVAV-1_fc2_report
@@ -67,8 +65,4 @@ df2 = _fc2.apply(df)
 print(df2.head())
 print(df2.describe())
 
-document = _fc2_report.create_report(args.output, df)
-path = os.path.join(os.path.curdir, "final_report")
-if not os.path.exists(path):
-    os.makedirs(path)
-document.save(os.path.join(path, f"{args.output}.docx"))
+save_report(args, df, _fc2_report)

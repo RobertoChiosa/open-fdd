@@ -2,13 +2,16 @@
 import os
 import time
 from io import BytesIO
-# import numpy as np
 
 # import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import pandas as pd
 from docx import Document
 from docx.shared import Inches
+
+
+# import numpy as np
+
 
 # from faults import FaultConditionOne
 

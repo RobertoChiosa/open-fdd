@@ -2,17 +2,30 @@
 
 > This is a Python based educational tool for studying fault equations defined by ASHRAE Guideline 36 for HVAC systems.
 
-G36 for AHU's has 15 fault equations the first 13 of which are broken into separate .py files. Fault equations 14 and 15
+[ASHRAE Guideline 36](https://www.techstreet.com/ashrae/standards/guideline-36-2021-high-performance-sequences-of-operation-for-hvac-systems?product_id=2229690)
+provides uniform sequences of operation for HVAC systems that are intended to maximize the systems'
+energy efficiency and performance, provide control stability, and allow for real-time fault detection and diagnostics.
+
+G36 for AHU's has 15 fault equations the first 13 of which are broken into separate `.py` files. Fault equations 14 and
+15
 are omitted for the time being as these are for AHU systems with heating cooling coil leaving temperature sensors that
 maybe not typical AHU type systems.
 
-To get started git clone this repo and run the `.py` files in this fashion with specifying a data input argument `i` and
-an output argument `o` which will be the name of the report Word document that can be retrieved from the `final_report`
-directory after the script executes. Fault equation 6 is used as example on how to run a script:
+## Get started
 
-```bash
-$ python ./fc6.py -i ./ahu_data/hvac_random_fake_data/fc6_fake_data1.csv -o fake1_ahu_fc6_report
-```
+* Git clone this repo
+  ```bash
+  git clone https://github.com/RobertoChiosa/open-fdd.git
+  ```
+
+* Run the `.py` files in this fashion with specifying a data input argument `i` and
+  an output argument `o` which will be the name of the report Word document that can be retrieved from
+  the `final_report`
+  directory after the script executes. Fault equation 6 is used as example on how to run a script:
+  ```bash
+  cd ./air_handling_unit
+  python ./fc1.py -i ./ahu_data/MZVAV-1.csv -o example_report
+  ```
 
 Each `fc.py` file contains a `FaultCondition` and a `FaultCodeReport` class.
 
@@ -21,7 +34,9 @@ Each `fc.py` file contains a `FaultCondition` and a `FaultCodeReport` class.
 The `FaultCondition` class returns a new
 Pandas dataframe with the fault flag as a new column. Some faults as defined by ASHRAE are only active in certain AHU
 operating states like an AHU heating (OS #1), economizer (OS #2), economizer + mechanical cooling (OS #3), or a
-mechanical cooling mode (OS #4). This Python library (to be available on Pypi in the future) internally handles to
+mechanical cooling mode (OS #4).
+
+This Python library (to be available on `Pypi` in the future) internally handles to
 ignore fault flags if the given fault flag is only to be active in a given AHU operating state (OS) or a combinations of
 OS modes.
 
@@ -61,8 +76,8 @@ containing the following info, currently tested on a months worth of data.
 * a histogram representing the hour of the day for when the fault equation is `True`.
 * sensor summary statistics filtered for when the AHU fan is running
 
-Caveats in the present moment is updating the repo to include °C and other metric system units currently only support
-imperial units but will incorporate this in future updates.
+> :warning: in the present moment is updating the repo to include °C and other metric system units currently only
+> support imperial units but will incorporate this in future updates.
 
 Required inputs in addition to a column name `Date` with a Pandas readable time stamp tested in the format
 of `12/22/2022  7:40:00 AM`:
@@ -117,7 +132,7 @@ csv file column names and required inputs for the given fault code. Applies to O
 from faults import FaultConditionTwo
 from reports import FaultCodeTwoReport
 
-# G36 error thresold params
+# G36 error threshold params
 OUTDOOR_DEGF_ERR_THRES = 5.
 MIX_DEGF_ERR_THRES = 5.
 RETURN_DEGF_ERR_THRES = 2.
@@ -606,7 +621,7 @@ building carbon reduction efforts.
 
 ## :books: References
 
-* [ASHRAE](https://www.linkedin.com/in/ben-bartling-510a0961/)
+* [ASHRAE Guideline 36](https://www.techstreet.com/ashrae/standards/guideline-36-2021-high-performance-sequences-of-operation-for-hvac-systems?product_id=2229690)
 
 ## :copyright: Licence
 

@@ -43,7 +43,7 @@ class PDF(FPDF):
         # Page number
         self.cell(0, 10, 'Page ' + str(self.page_no()), 0, 0, 'C')
 
-    def add_heading(self, num, text):
+    def add_heading(self, text, num=""):
         # Arial 12
         self.set_font('Arial', 'B', 12)
         # Title

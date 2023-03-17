@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 
 from faults import FaultConditionThirteen
@@ -52,8 +50,4 @@ df2 = _fc13.apply(df)
 print(df2.head())
 print(df2.describe())
 
-document = _fc13_report.create_report(args.output, df2)
-path = os.path.join(os.path.curdir, "final_report")
-if not os.path.exists(path):
-    os.makedirs(path)
-document.save(os.path.join(path, f"{args.output}.docx"))
+save_report(args, df, _fc13_report)
