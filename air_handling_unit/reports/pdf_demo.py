@@ -11,8 +11,9 @@
 # https://pyfpdf.github.io/fpdf2/Tutorial.html
 # Notes:
 
-from fpdf import FPDF
 import time
+
+from fpdf import FPDF
 
 
 class PDF(FPDF):
@@ -68,7 +69,6 @@ class PDF(FPDF):
             self.cell(0, 5, "   " + item)
             self.ln()
         self.ln()
-
 
     def add_picture(self, path):
         # Read text file

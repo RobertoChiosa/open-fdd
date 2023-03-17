@@ -3,7 +3,7 @@
 # Email:        roberto.chiosa@polito.it
 #
 # Created:      16/03/23
-# Script Name:  demo1.py
+# Script Name:  word_demo.py
 # Path:         air_handling_unit/reports
 #
 # Script Description:
@@ -55,4 +55,4 @@ if __name__ == '__main__':
 
     document.add_page_break()
 
-    document.save('../final_report/demo.docx')
+    document.save('../final_report/word_demo.docx')

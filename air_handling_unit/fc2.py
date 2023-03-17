@@ -10,6 +10,10 @@ from utils import custom_arg_parser
 # py .\fc2.py -i ./ahu_data/MZVAV-1.csv -o MZVAV-1_fc2_report
 # py .\fc2.py -i ./ahu_data/MZVAV-2-1.csv -o MZVAV-2-1_fc2_report
 # py .\fc2.py -i ./ahu_data/MZVAV-2-2.csv -o MZVAV-2-2_fc2_report
+# python 3.9 on macOS
+# python ./fc2.py -i ./ahu_data/MZVAV-1.csv -o MZVAV-1_fc2_report
+# python ./fc2.py -i ./ahu_data/MZVAV-2-1.csv -o MZVAV-2-1_fc2_report
+# python ./fc2.py -i ./ahu_data/MZVAV-2-2.csv -o MZVAV-2-2_fc2_report
 
 args = custom_arg_parser()
 

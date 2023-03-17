@@ -241,8 +241,7 @@ class FaultConditionFive:
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
 
         df['sat_check'] = df[self.sat_col] + self.supply_degf_err_thres
-        df['mat_check'] = df[self.mat_col] - \
-                          self.mix_degf_err_thres + self.delta_t_supply_fan
+        df['mat_check'] = df[self.mat_col] - self.mix_degf_err_thres + self.delta_t_supply_fan
 
         df["fc5_flag"] = (
                 (df['sat_check'] <= df['mat_check'])
@@ -469,8 +468,7 @@ class FaultConditionNine:
 
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
         df['oat_minus_oaterror'] = df[self.oat_col] - self.oat_err_thres
-        df['satsp_delta_saterr'] = df[self.satsp_col] - \
-                                   self.delta_supply_fan + self.supply_err_thres
+        df['satsp_delta_saterr'] = df[self.satsp_col] - self.delta_supply_fan + self.supply_err_thres
 
         df['fc9_flag'] = (
                 (df['oat_minus_oaterror'] > df['satsp_delta_saterr'])
@@ -562,8 +560,7 @@ class FaultConditionEleven:
 
     def apply(self, df: pd.DataFrame) -> pd.DataFrame:
         df['oat_plus_oaterror'] = df[self.oat_col] + self.oat_err_thres
-        df['satsp_delta_saterr'] = df[self.satsp_col] - \
-                                   self.delta_supply_fan - self.supply_err_thres
+        df['satsp_delta_saterr'] = df[self.satsp_col] - self.delta_supply_fan - self.supply_err_thres
 
         df['fc11_flag'] = (
                 (df['oat_plus_oaterror'] < df['satsp_delta_saterr'])

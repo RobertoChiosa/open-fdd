@@ -11,6 +11,11 @@ from utils import custom_arg_parser
 # py .\fc1.py -i ./ahu_data/MZVAV-2-1.csv -o MZVAV-2-1_fc1_report
 # py .\fc1.py -i ./ahu_data/MZVAV-2-2.csv -o MZVAV-2-2_fc1_report
 
+# python 3.9 on macOS
+# python ./fc1.py -i ./ahu_data/MZVAV-1.csv -o MZVAV-1_fc1_report
+# python ./fc1.py -i ./ahu_data/MZVAV-2-1.csv -o MZVAV-2-1_fc1_report
+# python ./fc1.py -i ./ahu_data/MZVAV-2-2.csv -o MZVAV-2-2_fc1_report
+
 args = custom_arg_parser()
 
 # G36 params shouldn't need adjusting
