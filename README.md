@@ -18,7 +18,8 @@ maybe not typical AHU type systems.
   git clone https://github.com/RobertoChiosa/open-fdd.git
   ```
 
-* Run the `.py` files in this fashion with specifying a data input argument `i` and
+* Each `fc.py` file contains a `FaultCondition` and a `FaultCodeReport` class. Run the `.py` files in this fashion with
+  specifying a data input argument `i` and
   an output argument `o` which will be the name of the report Word document that can be retrieved from
   the `final_report`
   directory after the script executes. Fault equation 6 is used as example on how to run a script:
@@ -27,14 +28,14 @@ maybe not typical AHU type systems.
   python ./fc1.py -i ./ahu_data/MZVAV-1.csv -o example_report
   ```
 
-Each `fc.py` file contains a `FaultCondition` and a `FaultCodeReport` class.
-
 ## :exclamation: Fault Condition
 
 The `FaultCondition` class returns a new
 Pandas dataframe with the fault flag as a new column. Some faults as defined by ASHRAE are only active in certain AHU
 operating states like an AHU heating (OS #1), economizer (OS #2), economizer + mechanical cooling (OS #3), or a
 mechanical cooling mode (OS #4).
+
+![](./air_handling_unit/images/ahu_operating_modes.png)
 
 This Python library (to be available on `Pypi` in the future) internally handles to
 ignore fault flags if the given fault flag is only to be active in a given AHU operating state (OS) or a combinations of
@@ -599,25 +600,23 @@ df2 = _fc13.apply(df)
 
 ## :warning: Other caveats
 
-G36 does not mention anything about if the AHU is running or not. It could be wise to ignore any faults created when the
-AHU is not running or fan status/command equals `False` or fan VFD speeds equal 0%.
-G36 also expects data to be on one minute intervals and that a 5-minute rolling average be used in the analysis. The
-rolling average is handled by the Pandas computing library when the data file in CSV format is read into memory:
-
-```python
-df = pd.read_csv(args.input,
-                 index_col='Date',
-                 parse_dates=True).rolling('5T').mean()
-```
+* G36 does not mention anything about if the AHU is running or not. It could be wise to ignore any faults created when
+  the AHU is not running or fan status/command equals `False` or fan VFD speeds equal 0%.
+* G36 also expects data to be on one minute intervals and that a 5-minute rolling average be used in the analysis. The
+  rolling average is handled by the Pandas computing library when the data file in CSV format is read into memory:
+  ```python
+  df = pd.read_csv(args.input, index_col='Date', parse_dates=True).rolling('5T').mean()
+  ```
 
 More to come to incorporate G36 central cooling and heating plants (See PDF 2021 G36 that includes these equations in
 the PDF folder). Please submit a GitHub issue or start a GitHub conservation to request additional features. Pull
 requests encouraged to promote a community based free open source tool to help promote ASHRAE, HVAC optimization, and
 building carbon reduction efforts.
 
-## :top: Author
+## :top: Authors and crontributors
 
-* [Ben Bartling](https://www.linkedin.com/in/ben-bartling-510a0961/)
+* Author [Ben Bartling](https://www.linkedin.com/in/ben-bartling-510a0961/)
+* Contributor: [Roberto Chiosa](https://www.linkedin.com/in/ben-bartling-510a0961/)
 
 ## :books: References
 
