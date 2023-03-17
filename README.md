@@ -33,9 +33,17 @@ maybe not typical AHU type systems.
 The `FaultCondition` class returns a new
 Pandas dataframe with the fault flag as a new column. Some faults as defined by ASHRAE are only active in certain AHU
 operating states like an AHU heating (OS #1), economizer (OS #2), economizer + mechanical cooling (OS #3), or a
-mechanical cooling mode (OS #4).
+mechanical cooling mode (OS #4). The operating states are defined as follows:
 
-![](./air_handling_unit/images/ahu_operating_modes.png)
+| Operating State                     | Heating Valve Position | Cooling Valve Position | Outdoor Air Damper Position |
+|-------------------------------------|------------------------|------------------------|-----------------------------|
+| #1: Heating                         | >0                     | =0                     | =min                        |
+| #2: Free cooling, modulating OA     | =0                     | =0                     | min<x<100%                  |
+| #3: Mechanical + economizer cooling | =0                     | =0                     | =100%                       |
+| #4: Mechanical cooling, minimum OA  | =0                     | =0                     | =min                        |
+| #5: Unknown or dehumidification     | -                      | -                      | -                           |
+
+![](./air_handling_unit/images/ahu_operating_modes_new.png)
 
 This Python library (to be available on `Pypi` in the future) internally handles to
 ignore fault flags if the given fault flag is only to be active in a given AHU operating state (OS) or a combinations of
