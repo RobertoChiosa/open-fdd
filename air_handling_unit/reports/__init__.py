@@ -1,19 +1,12 @@
-# import math
 import os
 import time
 from io import BytesIO
 
-# import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import pandas as pd
 from docx import Document
 from docx.shared import Inches
 
-
-# import numpy as np
-
-
-# from faults import FaultConditionOne
 
 # todo: add default document style
 
@@ -65,7 +58,7 @@ class FaultCodeOneReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc1_flag"
         delta = df.index.to_series().diff()
@@ -101,8 +94,9 @@ class FaultCodeOneReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame, output_col: str = None, duct_static_col: str = None
+            df: pd.DataFrame, output_col: str = None, duct_static_col: str = None
     ) -> plt:
         if output_col is None:
             output_col = "fc1_flag"
@@ -133,7 +127,7 @@ class FaultCodeOneReport:
         document = Document()
         document.add_heading("Fault Condition One Report", 0)
 
-        p = document.add_paragraph(
+        document.add_paragraph(
             """Fault condition one of ASHRAE Guideline 36 is related to flagging poor performance of a AHU variable 
             supply fan attempting to control to a duct pressure setpoint. Fault condition equation as defined by 
             ASHRAE:"""
@@ -228,7 +222,8 @@ class FaultCodeOneReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f'Average duct system pressure for when in fault condition (fan VFD speed > 95%): {flag_true_duct_static}"WC'
+                f"""Average duct system pressure for when in fault condition (fan VFD speed > 95%): 
+                {flag_true_duct_static}"WC"""
             )
 
         else:
@@ -275,7 +270,7 @@ class FaultCodeOneReport:
         else:
             paragraph.add_run(
                 "The percent True metric that represents the amount of time for when the fault flag is True is low "
-                "inidicating the fan appears to generate good duct static pressure"
+                "indicating the fan appears to generate good duct static pressure"
             )
 
         paragraph = document.add_paragraph()
@@ -323,14 +318,14 @@ class FaultCodeTwoReport:
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(25, 8))
         plt.title('Fault Conditions 2 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.mat_col],
-                           color='r', label="Mix Temp")  # red
+        ax1.plot(df.index, df[self.mat_col],
+                 color='r', label="Mix Temp")  # red
 
-        plot1b, = ax1.plot(df.index, df[self.rat_col],
-                           color='b', label="Return Temp")  # blue
+        ax1.plot(df.index, df[self.rat_col],
+                 color='b', label="Return Temp")  # blue
 
-        plot1c, = ax1.plot(df.index, df[self.oat_col],
-                           color='g', label="Out Temp")  # green
+        ax1.plot(df.index, df[self.oat_col],
+                 color='g', label="Out Temp")  # green
 
         ax1.legend(loc='best')
         ax1.set_ylabel("°F")
@@ -345,7 +340,7 @@ class FaultCodeTwoReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc2_flag"
         delta = df.index.to_series().diff()
@@ -388,8 +383,9 @@ class FaultCodeTwoReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             mat_col: str = None
     ) -> plt:
@@ -425,10 +421,10 @@ class FaultCodeTwoReport:
         document = Document()
         document.add_heading("Fault Condition Two Report", 0)
 
-        p = document.add_paragraph(
+        document.add_paragraph(
             """Fault condition two and three of ASHRAE Guideline 36 is related to flagging mixing air temperatures of 
             the AHU that are out of acceptable ranges. Fault condition 2 flags mixing air temperatures that are too 
-            low and fault condition 3 flags mixing temperatures that are too high when in comparision to return and 
+            low and fault condition 3 flags mixing temperatures that are too high when in comparison to return and 
             outside air data. The mixing air temperatures in theory should always be in between the return and 
             outside air temperatures ranges. Fault condition two equation as defined by ASHRAE:"""
         )
@@ -526,7 +522,9 @@ class FaultCodeTwoReport:
             paragraph = document.add_paragraph()
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 2 is True the average mix air temp is {flag_true_mat}°F, outside air temp is {flag_true_oat}°F, and return air temp is {flag_true_rat}°F. This could possibly help with pin pointing AHU operating conditions for when this fault is True.')
+                f"""When fault condition 2 is True the average mix air temp is {flag_true_mat}°F, outside air temp is 
+                {flag_true_oat}°F, and return air temp is {flag_true_rat}°F. This could possibly help with pin 
+                pointing AHU operating conditions for when this fault is True.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -563,11 +561,12 @@ class FaultCodeTwoReport:
         if percent_true > 5:
 
             paragraph.add_run(
-                'The percent True of time in fault condition 2 is high indicating the AHU temperature temp sensors are out of calibration')
+                """The percent True of time in fault condition 2 is high indicating the AHU temperature temp sensors 
+                are out of calibration""")
 
         else:
             paragraph.add_run(
-                'The percent True of time is low inidicating the AHU temperature sensors are within calibration')
+                'The percent True of time is low indicating the AHU temperature sensors are within calibration')
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -603,14 +602,14 @@ class FaultCodeThreeReport:
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(25, 8))
         plt.title('Fault Conditions 3 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.mat_col],
-                           color='r', label="Mix Temp")  # red
+        ax1.plot(df.index, df[self.mat_col],
+                 color='r', label="Mix Temp")  # red
 
-        plot1b, = ax1.plot(df.index, df[self.rat_col],
-                           color='b', label="Return Temp")  # blue
+        ax1.plot(df.index, df[self.rat_col],
+                 color='b', label="Return Temp")  # blue
 
-        plot1c, = ax1.plot(df.index, df[self.oat_col],
-                           color='g', label="Out Temp")  # green
+        ax1.plot(df.index, df[self.oat_col],
+                 color='g', label="Out Temp")  # green
 
         ax1.legend(loc='best')
         ax1.set_ylabel("°F")
@@ -625,7 +624,7 @@ class FaultCodeThreeReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc3_flag"
         delta = df.index.to_series().diff()
@@ -670,8 +669,9 @@ class FaultCodeThreeReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             mat_col: str = None
     ) -> plt:
@@ -707,8 +707,12 @@ class FaultCodeThreeReport:
         document = Document()
         document.add_heading("Fault Condition Three Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition two and three of ASHRAE Guideline 36 is related to flagging mixing air temperatures of the AHU that are out of acceptable ranges. Fault condition 2 flags mixing air temperatures that are too low and fault condition 3 flags mixing temperatures that are too high when in comparision to return and outside air data. The mixing air temperatures in theory should always be in between the return and outside air temperatures ranges. Fault condition three equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition two and three of ASHRAE Guideline 36 is related to flagging mixing air temperatures of 
+            the AHU that are out of acceptable ranges. Fault condition 2 flags mixing air temperatures that are too 
+            low and fault condition 3 flags mixing temperatures that are too high when in comparison to return and 
+            outside air data. The mixing air temperatures in theory should always be in between the return and 
+            outside air temperatures ranges. Fault condition three equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -780,7 +784,8 @@ class FaultCodeThreeReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -804,7 +809,9 @@ class FaultCodeThreeReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 3 is True the average mix air temp is {flag_true_mat}°F, outside air temp is {flag_true_oat}°F, and return air temp is {flag_true_rat}°F. This could possibly help with pin pointing AHU operating conditions for when this fault is True.')
+                f"""When fault condition 3 is True the average mix air temp is {flag_true_mat}°F, outside air temp is 
+                {flag_true_oat}°F, and return air temp is {flag_true_rat}°F. This could possibly help with pin 
+                pointing AHU operating conditions for when this fault is True.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -841,11 +848,12 @@ class FaultCodeThreeReport:
         if percent_true > 5:
 
             paragraph.add_run(
-                'The percent True of time in fault condition 3 is high indicating the AHU temp sensors are out of calibration')
+                """The percent True of time in fault condition 3 is high indicating the AHU temp sensors are out of 
+                calibration""")
 
         else:
             paragraph.add_run(
-                'The percent True of time is low inidicating the AHU temperature sensors are within calibration')
+                'The percent True of time is low indicating the AHU temperature sensors are within calibration')
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -876,25 +884,25 @@ class FaultCodeFourReport:
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(25, 8))
         plt.title('Fault Conditions 4 Plots')
 
-        plot1a, = ax1.plot(df.index,
-                           df[self.heating_mode_calc_col],
-                           label="Heat",
-                           color='orange')  # orange
+        ax1.plot(df.index,
+                 df[self.heating_mode_calc_col],
+                 label="Heat",
+                 color='orange')  # orange
 
-        plot1b, = ax1.plot(df.index,
-                           df[self.econ_only_cooling_mode_calc_col],
-                           label="Econ Clg",
-                           color='olive')  # olive
+        ax1.plot(df.index,
+                 df[self.econ_only_cooling_mode_calc_col],
+                 label="Econ Clg",
+                 color='olive')  # olive
 
-        plot1c, = ax1.plot(df.index,
-                           df[self.econ_plus_mech_cooling_mode_calc_col],
-                           label="Econ + Mech Clg",
-                           color='c')  # cyan
+        ax1.plot(df.index,
+                 df[self.econ_plus_mech_cooling_mode_calc_col],
+                 label="Econ + Mech Clg",
+                 color='c')  # cyan
 
-        plot1d, = ax1.plot(df.index,
-                           df[self.mech_cooling_only_mode_calc_col],
-                           label="Mech Clg",
-                           color='m')  # black
+        ax1.plot(df.index,
+                 df[self.mech_cooling_only_mode_calc_col],
+                 label="Mech Clg",
+                 color='m')  # black
 
         ax1.set_xlabel('Date')
         ax1.set_ylabel('Calculated AHU Operating States')
@@ -909,7 +917,7 @@ class FaultCodeFourReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
 
         if output_col is None:
             output_col = "fc4_flag"
@@ -950,9 +958,8 @@ class FaultCodeFourReport:
         delta_econ_clg = df[self.econ_plus_mech_cooling_mode_calc_col].index.to_series(
         ).diff()
 
-        total_hours_econ_clg = (
-                                       delta_econ_clg * df[
-                                   self.econ_plus_mech_cooling_mode_calc_col]).sum() / pd.Timedelta(hours=1)
+        total_hours_econ_clg = (delta_econ_clg *
+                                df[self.econ_plus_mech_cooling_mode_calc_col]).sum() / pd.Timedelta(hours=1)
 
         percent_econ_clg = round(
             df[self.econ_plus_mech_cooling_mode_calc_col].mean() * 100, 2)
@@ -983,8 +990,9 @@ class FaultCodeFourReport:
             total_hours_clg
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
     ) -> plt:
 
@@ -1015,8 +1023,12 @@ class FaultCodeFourReport:
         document = Document()
         document.add_heading("Fault Condition Four Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition four of ASHRAE Guideline 36 is related to flagging AHU control programming that is hunting between heating, economizing, economizing plus mechanical cooling, and mechanical cooling operating states. This fault diagnostic does NOT flag simultaneous heating and cooling, just excessive cycling between the states or operating modes the AHU maybe going in and out of. Fault condition four equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition four of ASHRAE Guideline 36 is related to flagging AHU control programming that is 
+            hunting between heating, economizing, economizing plus mechanical cooling, and mechanical cooling 
+            operating states. This fault diagnostic does NOT flag simultaneous heating and cooling, just excessive 
+            cycling between the states or operating modes the AHU maybe going in and out of. Fault condition four 
+            equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -1144,7 +1156,8 @@ class FaultCodeFourReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'Fault condition 4 is True because of excessive cycling between different control system operation modes.')
+                f"""Fault condition 4 is True because of excessive cycling between different control system operation 
+                modes.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -1162,7 +1175,13 @@ class FaultCodeFourReport:
         if fc_max_faults_found >= self.delta_os_max:
 
             paragraph.add_run(
-                f'The AHU control system needs tuning to reduce control loop hunting for setpoints. Its hunting or overshooting setpoints which can cause AHU systems to be oscillating (most likely too fast) between heating and cooling modes without never settling out. Low load conditions can also cause excessive cycling if heating or cooling setpoints are met very fast. Verify that the times when this fault is flagged that no occupant comfort issues persist. Fixing this fault may also improve energy efficiency and extend the mechanical equipment life span with the prevention of excessive cycling especially cooling compressors.')
+                f"""The AHU control system needs tuning to reduce control loop hunting for set-points. Its hunting or 
+                overshooting set-points which can cause AHU systems to be oscillating (most likely too fast) between 
+                heating and cooling modes without never settling out. Low load conditions can also cause excessive 
+                cycling if heating or cooling set-points are met very fast. Verify that the times when this fault is 
+                flagged that no occupant comfort issues persist. Fixing this fault may also improve energy efficiency 
+                and extend the mechanical equipment life span with the prevention of excessive cycling especially 
+                cooling compressors.""")
 
         else:
             paragraph.add_run(
@@ -1202,11 +1221,11 @@ class FaultCodeFiveReport:
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(25, 8))
         plt.title('Fault Conditions 5 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.mat_col],
-                           color='g', label="Mix Temp")
+        ax1.plot(df.index, df[self.mat_col],
+                 color='g', label="Mix Temp")
 
-        plot1b, = ax1.plot(df.index, df[self.sat_col],
-                           color='b', label="Supply Temp")
+        ax1.plot(df.index, df[self.sat_col],
+                 color='b', label="Supply Temp")
 
         ax1.legend(loc='best')
         ax1.set_ylabel("°F")
@@ -1226,7 +1245,7 @@ class FaultCodeFiveReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc5_flag"
 
@@ -1266,8 +1285,9 @@ class FaultCodeFiveReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             mat_col: str = None
     ) -> plt:
@@ -1303,8 +1323,11 @@ class FaultCodeFiveReport:
         document = Document()
         document.add_heading("Fault Condition Five Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition five of ASHRAE Guideline 36 is (an AHU heating mode or winter time conditions only fault equation) related to flagging supply air temperatures that are out of acceptable ranges based on the mix air temperature and an assumption for heat created by the AHU supply fan in the air stream. Fault condition five equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition five of ASHRAE Guideline 36 is (an AHU heating mode or winter time conditions only 
+            fault equation) related to flagging supply air temperatures that are out of acceptable ranges based on 
+            the mix air temperature and an assumption for heat created by the AHU supply fan in the air stream. Fault 
+            condition five equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -1376,7 +1399,8 @@ class FaultCodeFiveReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -1400,7 +1424,9 @@ class FaultCodeFiveReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 5 is True the average mix air temp is {flag_true_mat}°F and the outside air temp is {flag_true_sat}°F. This could possibly help with pin pointing AHU operating conditions for when this fault is True.')
+                f"""When fault condition 5 is True the average mix air temp is {flag_true_mat}°F and the outside air 
+                temp is {flag_true_sat}°F. This could possibly help with pin pointing AHU operating conditions for 
+                when this fault is True.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -1429,11 +1455,19 @@ class FaultCodeFiveReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating the AHU temperature sensors for either the supply or mix temperature are out of calibration. Verify the mixing temperature sensor is not a probe type sensor but a long averaging type sensor that is installed properly inside the AHU mixing chamber to get a good solid true reading of the actual air mixing temperature. Poor duct design may also contribute to not having good air mixing, to troubleshoot install data loggers inside the mixing chamber or take measurements when the AHU is running of different locations in the mixing chamber to spot where better air blending needs to take place.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is high 
+                indicating the AHU temperature sensors for either the supply or mix temperature are out of 
+                calibration. Verify the mixing temperature sensor is not a probe type sensor but a long averaging 
+                type sensor that is installed properly inside the AHU mixing chamber to get a good solid true reading 
+                of the actual air mixing temperature. Poor duct design may also contribute to not having good air 
+                mixing, to troubleshoot install data loggers inside the mixing chamber or take measurements when the 
+                AHU is running of different locations in the mixing chamber to spot where better air blending needs 
+                to take place.""")
 
         else:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the AHU temperature sensors are within calibration')
+                """The percent True metric that represents the amount of time for when the fault flag is True is low 
+                indicating the AHU temperature sensors are within calibration""")
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -1476,10 +1510,10 @@ class FaultCodeSixReport:
         ax2.set_ylabel('CFM')
         ax2.legend(loc='best')
 
-        plot3a = ax3.plot(
+        ax3.plot(
             df.index, df['percent_oa_calc'], label="OA Frac Calc", color="m")
-        plot3b = ax3.plot(df.index, df['perc_OAmin'],
-                          label="OA Perc Min Calc", color="y")
+        ax3.plot(df.index, df['perc_OAmin'],
+                 label="OA Perc Min Calc", color="y")
         ax3.set_xlabel('Date')
         ax3.set_ylabel('%')
         ax3.legend(loc='best')
@@ -1500,7 +1534,7 @@ class FaultCodeSixReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc6_flag"
 
@@ -1545,8 +1579,9 @@ class FaultCodeSixReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             vav_total_flow: str = None
     ) -> plt:
@@ -1579,8 +1614,13 @@ class FaultCodeSixReport:
         document = Document()
         document.add_heading("Fault Condition Six Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition six of ASHRAE Guideline 36 is an attempt at verifying that AHU design minimum outside air is close to the calculated outside air fraction through the outside, mix, and return air temperature sensors. A fault will get flagged in an AHU heating or mechanical cooling mode only if the calculated OA fraction is too low or too high as to compared to percent Min calculation which is the AHU total air flow divided by the design minimum outdoor air expressed as a percent. Fault condition six equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition six of ASHRAE Guideline 36 is an attempt at verifying that AHU design minimum outside 
+            air is close to the calculated outside air fraction through the outside, mix, and return air temperature 
+            sensors. A fault will get flagged in an AHU heating or mechanical cooling mode only if the calculated OA 
+            fraction is too low or too high as to compared to percent Min calculation which is the AHU total air flow 
+            divided by the design minimum outdoor air expressed as a percent. Fault condition six equation as defined 
+            by ASHRAE:"""
         )
 
         document.add_picture(
@@ -1652,7 +1692,8 @@ class FaultCodeSixReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -1676,7 +1717,10 @@ class FaultCodeSixReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 6 is True the average AHU mix air temperature {flag_true_mat}°F, outside air temperature is {flag_true_oat}°F, and the return air temperature is {flag_true_rat}°F. This could possibly help with pin pointing AHU operating conditions for when this AHU is drawing in excessive outside air.')
+                f"""When fault condition 6 is True the average AHU mix air temperature {flag_true_mat}°F, 
+                outside air temperature is {flag_true_oat}°F, and the return air temperature is {flag_true_rat}°F. 
+                This could possibly help with pin pointing AHU operating conditions for when this AHU is drawing in 
+                excessive outside air.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -1719,11 +1763,15 @@ class FaultCodeSixReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent true metric maybe yeilding sensors are out of calibration either on the AHU outside, mix, or return air temperature sensors that handle the OA fraction calculation or the totalized air flow calculation handled by a totalizing all VAV box air flows or AHU AFMS. Air flow and/or AHU temperature sensor may require recalibration.')
+                """The percent true metric maybe yielding sensors are out of calibration either on the AHU outside, 
+                mix, or return air temperature sensors that handle the OA fraction calculation or the tantalized air 
+                flow calculation handled by a totalizing all VAV box air flows or AHU AFMS. Air flow and/or AHU 
+                temperature sensor may require recalibration.""")
 
         else:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the sensors are within calibration')
+                """The percent True metric that represents the amount of time for when the fault flag is True is low 
+                indicating the sensors are within calibration""")
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -1756,8 +1804,9 @@ class FaultCodeSevenReport:
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(25, 8))
         plt.title('Fault Conditions 7 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.sat_col], label="SAT")
-        plot1b, = ax1.plot(df.index, df[self.satsp_col], label="SATsp")
+        ax1.plot(df.index, df[self.sat_col], label="SAT")
+
+        ax1.plot(df.index, df[self.satsp_col], label="SATsp")
         ax1.legend(loc='best')
         ax1.set_ylabel('AHU Supply Temps °F')
 
@@ -1776,7 +1825,7 @@ class FaultCodeSevenReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc7_flag"
 
@@ -1816,8 +1865,9 @@ class FaultCodeSevenReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             vav_total_flow: str = None
     ) -> plt:
@@ -1850,8 +1900,10 @@ class FaultCodeSevenReport:
         document = Document()
         document.add_heading("Fault Condition Seven Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition seven of ASHRAE Guideline 36 is an AHU heating mode only with an attempt at verifying an AHU heating or cooling valve is not stuck or leaking by verifying AHU supply temperature to supply temperature setpoint. Fault condition seven equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition seven of ASHRAE Guideline 36 is an AHU heating mode only with an attempt at verifying 
+            an AHU heating or cooling valve is not stuck or leaking by verifying AHU supply temperature to supply 
+            temperature setpoint. Fault condition seven equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -1923,7 +1975,8 @@ class FaultCodeSevenReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -1947,7 +2000,8 @@ class FaultCodeSevenReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 7 is True the average AHU supply air setpoint is {flag_true_satsp} in °F and the supply air temperature is {flag_true_sat} in °F.')
+                f"""When fault condition 7 is True the average AHU supply air setpoint is {flag_true_satsp} in °F and 
+                the supply air temperature is {flag_true_sat} in °F.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -1984,11 +2038,19 @@ class FaultCodeSevenReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating the AHU heating valve maybe broken or there could be a flow issue with the amount of hot water flowing through the coil or that the boiler system reset is too aggressive and there isnt enough heat being produced by this coil. It could be worth viewing mechanical blue prints for this AHU design schedule to see what hot water temperature this coil was designed for and compare it to actual hot water supply temperatures. IE., an AHU hot water coil sized to have a 180°F water flowing through it may have a durastic reduction in performance the colder the hot water is flowing through it, if need be consult a mechanical design engineer to rectify.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is high 
+                indicating the AHU heating valve maybe broken or there could be a flow issue with the amount of hot 
+                water flowing through the coil or that the boiler system reset is too aggressive and there isn't 
+                enough heat being produced by this coil. It could be worth viewing mechanical blue prints for this 
+                AHU design schedule to see what hot water temperature this coil was designed for and compare it to 
+                actual hot water supply temperatures. IE., an AHU hot water coil sized to have a 180°F water flowing 
+                through it may have a drastic reduction in performance the colder the hot water is flowing through 
+                it, if need be consult a mechanical design engineer to rectify.""")
 
         else:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the AHU heating valve operates Ok.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is low 
+                indicating the AHU heating valve operates Ok.""")
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -2019,8 +2081,9 @@ class FaultCodeEightReport:
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(25, 8))
         plt.title('Fault Conditions 8 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.sat_col], label="SAT")
-        plot1b, = ax1.plot(df.index, df[self.mat_col], label="MAT")
+        ax1.plot(df.index, df[self.sat_col], label="SAT")
+
+        ax1.plot(df.index, df[self.mat_col], label="MAT")
         ax1.legend(loc='best')
         ax1.set_ylabel('AHU Temps °F')
 
@@ -2034,7 +2097,7 @@ class FaultCodeEightReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc8_flag"
 
@@ -2074,8 +2137,9 @@ class FaultCodeEightReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             vav_total_flow: str = None
     ) -> plt:
@@ -2108,8 +2172,10 @@ class FaultCodeEightReport:
         document = Document()
         document.add_heading("Fault Condition Eight Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition Eight of ASHRAE Guideline 36 is an AHU economizer free cooling mode only with an attempt at flagging conditions when the AHU mixing air temperature the supply air temperature are not approximately equal. Fault condition eight equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition Eight of ASHRAE Guideline 36 is an AHU economizer free cooling mode only with an 
+            attempt at flagging conditions when the AHU mixing air temperature the supply air temperature are not 
+            approximately equal. Fault condition eight equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -2181,7 +2247,8 @@ class FaultCodeEightReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -2205,7 +2272,8 @@ class FaultCodeEightReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 8 is True the average AHU mix air is {flag_true_mat} in °F and the supply air temperature is {flag_true_sat} in °F.')
+                f"""When fault condition 8 is True the average AHU mix air is {flag_true_mat} in °F and the supply 
+                air temperature is {flag_true_sat} in °F.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -2235,10 +2303,17 @@ class FaultCodeEightReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating temperature sensor error or the heating/cooling coils are leaking potentially creating simultenious heating/cooling which can be an energy penalty for running the AHU in this fashion. Verify AHU mix/supply temperature sensor calibration in addition to a potential mechanical issue of a leaking valve. A leaking valve can be troubleshot by isolating the valve closed by manual shut off valves where piping lines enter the AHU coil and then verifying any changes in the AHU discharge air temperature.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is high 
+                indicating temperature sensor error or the heating/cooling coils are leaking potentially creating 
+                simultaneous heating/cooling which can be an energy penalty for running the AHU in this fashion. 
+                Verify AHU mix/supply temperature sensor calibration in addition to a potential mechanical issue of a 
+                leaking valve. A leaking valve can be troubleshot by isolating the valve closed by manual shut off 
+                valves where piping lines enter the AHU coil and then verifying any changes in the AHU discharge air 
+                temperature.""")
         else:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the AHU components are within calibration for this fault equation Ok.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is low 
+                indicating the AHU components are within calibration for this fault equation Ok.""")
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -2270,8 +2345,9 @@ class FaultCodeNineReport:
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(25, 8))
         plt.title('Fault Conditions 10 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.satsp_col], label="SATSP")
-        plot1b, = ax1.plot(df.index, df[self.oat_col], label="OAT")
+        ax1.plot(df.index, df[self.satsp_col], label="SATSP")
+
+        ax1.plot(df.index, df[self.oat_col], label="OAT")
         ax1.legend(loc='best')
         ax1.set_ylabel('AHU Temps °F')
 
@@ -2285,7 +2361,7 @@ class FaultCodeNineReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc9_flag"
 
@@ -2325,8 +2401,9 @@ class FaultCodeNineReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             vav_total_flow: str = None
     ) -> plt:
@@ -2359,8 +2436,10 @@ class FaultCodeNineReport:
         document = Document()
         document.add_heading("Fault Condition Nine Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition nine of ASHRAE Guideline 36 is an AHU economizer free cooling mode only with an attempt at flagging conditions where the outside air temperature is too warm for cooling without additional mechanical cooling. Fault condition nine equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition nine of ASHRAE Guideline 36 is an AHU economizer free cooling mode only with an 
+            attempt at flagging conditions where the outside air temperature is too warm for cooling without 
+            additional mechanical cooling. Fault condition nine equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -2432,7 +2511,8 @@ class FaultCodeNineReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -2456,7 +2536,8 @@ class FaultCodeNineReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 9 is True the average outside air is {flag_true_oat} in °F and the supply air temperature setpoinht is {flag_true_satsp} in °F.')
+                f"""When fault condition 9 is True the average outside air is {flag_true_oat} in °F and the supply 
+                air temperature setpoint is {flag_true_satsp} in °F.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -2487,11 +2568,15 @@ class FaultCodeNineReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating temperature sensor error or the cooling valve is stuck open or leaking causing overcooling. Trouble shoot a leaking valve by isolating the coil with manual shutoff valves and verify a change in AHU discharge air temperature with the AHU running.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is high 
+                indicating temperature sensor error or the cooling valve is stuck open or leaking causing 
+                over-cooling. Trouble shoot a leaking valve by isolating the coil with manual shutoff valves and 
+                verify a change in AHU discharge air temperature with the AHU running.""")
 
         else:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the AHU components are within calibration for this fault equation Ok.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is low 
+                indicating the AHU components are within calibration for this fault equation Ok.""")
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -2524,14 +2609,15 @@ class FaultCodeTenReport:
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(25, 8))
         plt.title('Fault Conditions 10 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.mat_col], label="MAT")
-        plot1b, = ax1.plot(df.index, df[self.oat_col], label="OAT")
+        ax1.plot(df.index, df[self.mat_col], label="MAT")
+
+        ax1.plot(df.index, df[self.oat_col], label="OAT")
         ax1.legend(loc='best')
         ax1.set_ylabel('AHU Temps °F')
 
-        plot2a, = ax2.plot(
+        ax2.plot(
             df.index, df[self.clg_col], label="AHU Cool Vlv", color="r")
-        plot2b, = ax2.plot(
+        ax2.plot(
             df.index, df[self.economizer_sig_col], label="AHU Dpr Cmd", color="g")
         ax2.legend(loc='best')
         ax2.set_ylabel('%')
@@ -2546,7 +2632,7 @@ class FaultCodeTenReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc10_flag"
 
@@ -2587,8 +2673,9 @@ class FaultCodeTenReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             vav_total_flow: str = None
     ) -> plt:
@@ -2621,8 +2708,11 @@ class FaultCodeTenReport:
         document = Document()
         document.add_heading("Fault Condition Ten Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition ten of ASHRAE Guideline 36 is an AHU economizer + mechanical cooling mode only with an attempt at flagging conditions where the outside air temperature and mixing air temperatures are not approximetely equal when the AHU is in a 100% outside air mode. Fault condition ten equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition ten of ASHRAE Guideline 36 is an AHU economizer + mechanical cooling mode only with an 
+            attempt at flagging conditions where the outside air temperature and mixing air temperatures are not 
+            approximately equal when the AHU is in a 100% outside air mode. Fault condition ten equation as defined 
+            by ASHRAE:"""
         )
 
         document.add_picture(
@@ -2693,7 +2783,8 @@ class FaultCodeTenReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -2717,7 +2808,8 @@ class FaultCodeTenReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 9 is True the average outside air is {flag_true_oat} in °F and the mixing air temperature is {flag_true_mat} in °F.')
+                f"""When fault condition 9 is True the average outside air is {flag_true_oat} in °F and the mixing 
+                air temperature is {flag_true_mat} in °F.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -2748,11 +2840,23 @@ class FaultCodeTenReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating temperature sensor error or the mixing air dampers are stuck or broken with the inability for the AHU to go into a proper 100 percent outside air mode. If the outside air temperature is a global variable on the BAS verify (IE, installed to the boiler plant controller and then shared via supervisory level logic on the BAS to the AHU controllers on the BAS network) that where the actual OA temperature is installed that is on the North side of the building in the shade. On the AHU verify mix temperature sensor calibration and that the mixing dampers have good proper rotation with good seals when in the closed position. When testing AHU systems operating in a 100 percent outside air mode it could be worth verifying exhaust systems or return fans are operating properly. In theory if alot of air is being pumped into the building and it is allowed to be exhaust or relieved properly, a balanced building will not have any issues of closing or opening egress doors to the building due to excess positive building pressure.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is high 
+                indicating temperature sensor error or the mixing air dampers are stuck or broken with the inability 
+                for the AHU to go into a proper 100 percent outside air mode. If the outside air temperature is a 
+                global variable on the BAS verify (IE, installed to the boiler plant controller and then shared via 
+                supervisory level logic on the BAS to the AHU controllers on the BAS network) that where the actual 
+                OA temperature is installed that is on the North side of the building in the shade. On the AHU verify 
+                mix temperature sensor calibration and that the mixing dampers have good proper rotation with good 
+                seals when in the closed position. When testing AHU systems operating in a 100 percent outside air 
+                mode it could be worth verifying exhaust systems or return fans are operating properly. In theory if 
+                alot of air is being pumped into the building and it is allowed to be exhaust or relieved properly, 
+                a balanced building will not have any issues of closing or opening egress doors to the building due 
+                to excess positive building pressure.""")
 
         else:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the AHU components are within calibration for this fault equation Ok.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is low 
+                indicating the AHU components are within calibration for this fault equation Ok.""")
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -2785,14 +2889,15 @@ class FaultCodeElevenReport:
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(25, 8))
         plt.title('Fault Conditions 11 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.sat_sp_col], label="SATSP")
-        plot1b, = ax1.plot(df.index, df[self.oat_col], label="OAT")
+        ax1.plot(df.index, df[self.sat_sp_col], label="SATSP")
+
+        ax1.plot(df.index, df[self.oat_col], label="OAT")
         ax1.legend(loc='best')
         ax1.set_ylabel('AHU Temps °F')
 
-        plot2a, = ax2.plot(
+        ax2.plot(
             df.index, df[self.clg_col], label="AHU Cool Vlv", color="r")
-        plot2b, = ax2.plot(
+        ax2.plot(
             df.index, df[self.economizer_sig_col], label="AHU Dpr Cmd", color="g")
         ax2.legend(loc='best')
         ax2.set_ylabel('%')
@@ -2807,7 +2912,7 @@ class FaultCodeElevenReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc11_flag"
 
@@ -2848,8 +2953,9 @@ class FaultCodeElevenReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             vav_total_flow: str = None
     ) -> plt:
@@ -2882,8 +2988,10 @@ class FaultCodeElevenReport:
         document = Document()
         document.add_heading("Fault Condition Eleven Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition eleven of ASHRAE Guideline 36 is an AHU economizer + mechanical cooling mode only with an attempt at flagging conditions where the outside air temperature is too low for 100% outside air AHU operating mode. Fault condition Eleven equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition eleven of ASHRAE Guideline 36 is an AHU economizer + mechanical cooling mode only with 
+            an attempt at flagging conditions where the outside air temperature is too low for 100% outside air AHU 
+            operating mode. Fault condition Eleven equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -2955,7 +3063,8 @@ class FaultCodeElevenReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -2979,7 +3088,8 @@ class FaultCodeElevenReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 11 is True the average AHU mix air is {flag_true_oat} in °F and the supply air temperature is {flag_true_sat_sp} in °F.')
+                f"""When fault condition 11 is True the average AHU mix air is {flag_true_oat} in °F and the supply 
+                air temperature is {flag_true_sat_sp} in °F.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -3011,10 +3121,20 @@ class FaultCodeElevenReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating temperature sensor error or the heating coil could be leaking potentially creating simultaneous heating/cooling scenario which can be an energy penalty for running the AHU in this fashion. Also visually verify with the AHU off via lock-out-tag-out that the mixing dampers operates effectively. To do this have one person the BAS sending operator override commands to drive the damper back and forth. The other person should put on eyes on the operation of the actuator motor driving the OA dampers 100 percent open and then closed and visually verify the dampers rotate effectively per BAS command where to also visually verify the dampers have a good seal when in the closed position. Also consider looking into BAS programming that may need tuning or parameter adjustments for the staging between OS state changes between AHU modes of operation.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is high 
+                indicating temperature sensor error or the heating coil could be leaking potentially creating 
+                simultaneous heating/cooling scenario which can be an energy penalty for running the AHU in this 
+                fashion. Also visually verify with the AHU off via lock-out-tag-out that the mixing dampers operates 
+                effectively. To do this have one person the BAS sending operator override commands to drive the 
+                damper back and forth. The other person should put on eyes on the operation of the actuator motor 
+                driving the OA dampers 100 percent open and then closed and visually verify the dampers rotate 
+                effectively per BAS command where to also visually verify the dampers have a good seal when in the 
+                closed position. Also consider looking into BAS programming that may need tuning or parameter 
+                adjustments for the staging between OS state changes between AHU modes of operation.""")
         else:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the AHU components are within calibration for this fault equation Ok.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is low 
+                indicating the AHU components are within calibration for this fault equation Ok.""")
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -3047,14 +3167,15 @@ class FaultCodeTwelveReport:
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(25, 8))
         plt.title('Fault Conditions 12 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.sat_col], label="SAT")
-        plot1b, = ax1.plot(df.index, df[self.mat_col], label="MAT")
+        ax1.plot(df.index, df[self.sat_col], label="SAT")
+
+        ax1.plot(df.index, df[self.mat_col], label="MAT")
         ax1.legend(loc='best')
         ax1.set_ylabel('AHU Temps °F')
 
-        plot2a, = ax2.plot(
+        ax2.plot(
             df.index, df[self.clg_col], label="AHU Cool Vlv", color="r")
-        plot2b, = ax2.plot(
+        ax2.plot(
             df.index, df[self.economizer_sig_col], label="AHU Dpr Cmd", color="g")
         ax2.legend(loc='best')
         ax2.set_ylabel('%')
@@ -3069,7 +3190,7 @@ class FaultCodeTwelveReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc12_flag"
 
@@ -3110,8 +3231,9 @@ class FaultCodeTwelveReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             vav_total_flow: str = None
     ) -> plt:
@@ -3144,8 +3266,10 @@ class FaultCodeTwelveReport:
         document = Document()
         document.add_heading("Fault Condition Twelve Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition Twelve of ASHRAE Guideline 36 is an AHU economizer + mechanical cooling mode and AHU mechanical cooling mode only with an attempt at flagging conditions when the AHU mixing air temperature is warmer than the supply air temperature. Fault condition Twelve equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition Twelve of ASHRAE Guideline 36 is an AHU economizer + mechanical cooling mode and AHU 
+            mechanical cooling mode only with an attempt at flagging conditions when the AHU mixing air temperature 
+            is warmer than the supply air temperature. Fault condition Twelve equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -3217,7 +3341,8 @@ class FaultCodeTwelveReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -3241,7 +3366,8 @@ class FaultCodeTwelveReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 12 is True the average AHU mix air is {flag_true_mat} in °F and the supply air temperature is {flag_true_sat} in °F.')
+                f"""When fault condition 12 is True the average AHU mix air is {flag_true_mat} in °F and the supply 
+                air temperature is {flag_true_sat} in °F.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -3272,10 +3398,17 @@ class FaultCodeTwelveReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating temperature sensor error or the heating/cooling coils are leaking potentially creating simultenious heating/cooling which can be an energy penalty for running the AHU in this fashion. Verify AHU mix/supply temperature sensor calibration in addition to a potential mechanical issue of a leaking valve. A leaking valve can be troubleshot by isolating the valve closed by manual shut off valves where piping lines enter the AHU coil and then verifying any changes in the AHU discharge air temperature.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is high 
+                indicating temperature sensor error or the heating/cooling coils are leaking potentially creating 
+                simultaneous heating/cooling which can be an energy penalty for running the AHU in this fashion. 
+                Verify AHU mix/supply temperature sensor calibration in addition to a potential mechanical issue of a 
+                leaking valve. A leaking valve can be troubleshot by isolating the valve closed by manual shut off 
+                valves where piping lines enter the AHU coil and then verifying any changes in the AHU discharge air 
+                temperature.""")
         else:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the AHU components are within calibration for this fault equation Ok.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is low 
+                indicating the AHU components are within calibration for this fault equation Ok.""")
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
@@ -3310,14 +3443,15 @@ class FaultCodeThirteenReport:
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(25, 8))
         plt.title('Fault Conditions 13 Plot')
 
-        plot1a, = ax1.plot(df.index, df[self.sat_col], label="SAT")
-        plot1b, = ax1.plot(df.index, df[self.satsp_col], label="SATsp")
+        ax1.plot(df.index, df[self.sat_col], label="SAT")
+
+        ax1.plot(df.index, df[self.satsp_col], label="SATsp")
         ax1.legend(loc='best')
         ax1.set_ylabel('AHU Supply Temps °F')
 
-        plot2a, = ax2.plot(
+        ax2.plot(
             df.index, df[self.clg_col], label="AHU Cool Vlv", color="r")
-        plot2b, = ax2.plot(
+        ax2.plot(
             df.index, df[self.economizer_sig_col], label="AHU Dpr Cmd", color="g")
         ax2.legend(loc='best')
         ax2.set_ylabel('%')
@@ -3332,7 +3466,7 @@ class FaultCodeThirteenReport:
 
         return fig
 
-    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> str:
+    def summarize_fault_times(self, df: pd.DataFrame, output_col: str = None) -> tuple:
         if output_col is None:
             output_col = "fc13_flag"
 
@@ -3373,8 +3507,9 @@ class FaultCodeThirteenReport:
             df_motor_on_filtered
         )
 
+    @staticmethod
     def create_hist_plot(
-            self, df: pd.DataFrame,
+            df: pd.DataFrame,
             output_col: str = None,
             vav_total_flow: str = None
     ) -> plt:
@@ -3407,8 +3542,10 @@ class FaultCodeThirteenReport:
         document = Document()
         document.add_heading("Fault Condition Thirteen Report", 0)
 
-        p = document.add_paragraph(
-            """Fault condition thirteen of ASHRAE Guideline 36 is an AHU cooling mode only with an attempt at verifying an AHU cooling valve is not stuck or leaking by verifying AHU supply temperature to supply temperature setpoint. Fault condition thirteen equation as defined by ASHRAE:"""
+        document.add_paragraph(
+            """Fault condition thirteen of ASHRAE Guideline 36 is an AHU cooling mode only with an attempt at 
+            verifying an AHU cooling valve is not stuck or leaking by verifying AHU supply temperature to supply 
+            temperature setpoint. Fault condition thirteen equation as defined by ASHRAE:"""
         )
 
         document.add_picture(
@@ -3480,7 +3617,8 @@ class FaultCodeThirteenReport:
             paragraph = document.add_paragraph()
             paragraph.style = "List Bullet"
             paragraph.add_run(
-                f"This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building fuel use through HVAC"
+                f"""This fan system appears to run 24/7 consider implementing occupancy schedules to reduce building 
+                fuel use through HVAC"""
             )
 
         paragraph = document.add_paragraph()
@@ -3504,7 +3642,8 @@ class FaultCodeThirteenReport:
 
             paragraph.style = 'List Bullet'
             paragraph.add_run(
-                f'When fault condition 13 is True the average AHU supply air setpoint is {flag_true_satsp} in °F and the supply air temperature is {flag_true_sat} in °F.')
+                f"""When fault condition 13 is True the average AHU supply air setpoint is {flag_true_satsp} in °F 
+                and the supply air temperature is {flag_true_sat} in °F.""")
 
         else:
             print("NO FAULTS FOUND - For report skipping time-of-day Histogram plot")
@@ -3540,11 +3679,24 @@ class FaultCodeThirteenReport:
 
         if percent_true > 5.0:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is high indicating the AHU cooling valve maybe broken or there could be a flow issue with the amount of cold water flowing through the coil or that the chiller system leaving temperature reset is too aggressive and there isnt enough cold air being produced by this cooling coil. If this AHU has a DX cooling coil there could be a problem with the refrigerant charge. It could be worth viewing mechanical blue prints for this AHU design schedule to see what cold water temperature this coil was designed for and compare it to actual cold water supply temperatures. IE., an AHU cooling coil sized to have a 44°F water flowing through it may have significant performance reduction with 48°F water flowing through it and under design day type high load conditions this AHU may not meet setpoint or properly dehumidify the air for the building which could potentially also lead to IAQ or mold issues if %RH levels in the zones are kept within tollerance. Also check excessive outside air faults in fault condition 6 that the AHU isnt taking in too much outdoor air which could also cause coil performance issues if the load on the coil is higher than what it was intended for.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is high 
+                indicating the AHU cooling valve maybe broken or there could be a flow issue with the amount of cold 
+                water flowing through the coil or that the chiller system leaving temperature reset is too aggressive 
+                and there isn't enough cold air being produced by this cooling coil. If this AHU has a DX cooling coil 
+                there could be a problem with the refrigerant charge. It could be worth viewing mechanical blue 
+                prints for this AHU design schedule to see what cold water temperature this coil was designed for and 
+                compare it to actual cold water supply temperatures. IE., an AHU cooling coil sized to have a 44°F 
+                water flowing through it may have significant performance reduction with 48°F water flowing through 
+                it and under design day type high load conditions this AHU may not meet setpoint or properly 
+                dehumidify the air for the building which could potentially also lead to IAQ or mold issues if %RH 
+                levels in the zones are kept within tolerance. Also check excessive outside air faults in fault 
+                condition 6 that the AHU isn't taking in too much outdoor air which could also cause coil performance 
+                issues if the load on the coil is higher than what it was intended for.""")
 
         else:
             paragraph.add_run(
-                'The percent True metric that represents the amount of time for when the fault flag is True is low inidicating the AHU cooling valve operates Ok.')
+                """The percent True metric that represents the amount of time for when the fault flag is True is low 
+                indicating the AHU cooling valve operates Ok.""")
 
         paragraph = document.add_paragraph()
         run = paragraph.add_run(f"Report generated: {time.ctime()}")
