@@ -51,3 +51,15 @@ def save_report(args, df, report):
     if not os.path.exists(path):
         os.makedirs(path)
     document.save(os.path.join(path, f"{args.output}.docx"))
+
+
+# create a function to describe dataset
+def describe_dataset(df):
+    start = df.head(1).index.date
+    print("Dataset start: ", start)
+
+    end = df.tail(1).index.date
+    print("Dataset end: ", end)
+
+    for col in df.columns:
+        print("df column: ", col, "- max len: ", df[col].size)

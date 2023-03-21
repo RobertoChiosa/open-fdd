@@ -2,7 +2,7 @@ import pandas as pd
 
 from faults import FaultConditionTwo
 from reports import FaultCodeTwoReport
-from utils import custom_arg_parser, save_report
+from utils import custom_arg_parser, save_report, describe_dataset
 
 # python 3.10 on Windows 10
 # py .\fc2.py -i ./ahu_data/MZVAV-1.csv -o MZVAV-1_fc2_report
@@ -52,14 +52,8 @@ if __name__ == '__main__':
     print(df)
     '''
 
-    start = df.head(1).index.date
-    print("Dataset start: ", start)
-
-    end = df.tail(1).index.date
-    print("Dataset end: ", end)
-
-    for col in df.columns:
-        print("df column: ", col, "- max len: ", df[col].size)
+    # describe dataset printing some stuff
+    describe_dataset(df)
 
     # return a whole new dataframe with fault flag as new col
     df2 = _fc2.apply(df)

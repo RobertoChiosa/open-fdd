@@ -72,13 +72,10 @@ class FaultConditionTwo:
         df['temp_min_check'] = np.minimum(df[self.rat_col] - self.return_degf_err_thres,
                                           df[self.oat_col] - self.outdoor_degf_err_thres)
 
-        df["fc2_flag"] = (
-                (df['mat_check'] < df['temp_min_check'])
-
-                # this fault is supposed to contain OS state 5
-                # confirm with G36 fault author adding in fan status okay
-                & (df[self.fan_vfd_speed_col] > .01)
-        ).astype(int)
+        df["fc2_flag"] = ((df['mat_check'] < df['temp_min_check'])
+                          # this fault is supposed to contain OS state 5
+                          # confirm with G36 fault author adding in fan status okay
+                          & (df[self.fan_vfd_speed_col] > .01)).astype(int)
 
         if self.troubleshoot:
             print("Troubleshoot mode enabled - not removing helper columns")

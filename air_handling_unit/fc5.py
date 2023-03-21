@@ -38,14 +38,8 @@ if __name__ == '__main__':
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
 
-    start = df.head(1).index.date
-    print("Dataset start: ", start)
-
-    end = df.tail(1).index.date
-    print("Dataset end: ", end)
-
-    for col in df.columns:
-        print("df column: ", col, "- max len: ", df[col].size)
+    # describe dataset printing some stuff
+    describe_dataset(df)
 
     # return a whole new dataframe with fault flag as new col
     df2 = _fc5.apply(df)
