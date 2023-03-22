@@ -41,7 +41,6 @@ if __name__ == '__main__':
         "AHU: Supply Air Duct Static Pressure Set Point",
     )
 
-    # todo : load data and metadata separately and then define the input in the class
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling('5T').mean()
 
     # describe dataset printing some stuff
