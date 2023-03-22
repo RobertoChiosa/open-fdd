@@ -17,23 +17,23 @@ if __name__ == '__main__':
     MIX_DEGF_ERR_THRES = 5.
 
     _fc5 = FaultConditionFive(
-        MIX_DEGF_ERR_THRES,
-        SUPPLY_DEGF_ERR_THRES,
-        DELTA_T_SUPPLY_FAN,
-        "AHU: Mixed Air Temperature",
-        "AHU: Supply Air Temperature",
-        "AHU: Heating Coil Valve Control Signal",
-        "AHU: Supply Air Fan Speed Control Signal"
+        mix_degf_err_thres=MIX_DEGF_ERR_THRES,
+        supply_degf_err_thres=SUPPLY_DEGF_ERR_THRES,
+        delta_t_supply_fan=DELTA_T_SUPPLY_FAN,
+        mat_col="AHU: Mixed Air Temperature",
+        sat_col="AHU: Supply Air Temperature",
+        htg_vlv_col="AHU: Heating Coil Valve Control Signal",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     _fc5_report = FaultCodeFiveReport(
-        MIX_DEGF_ERR_THRES,
-        SUPPLY_DEGF_ERR_THRES,
-        DELTA_T_SUPPLY_FAN,
-        "AHU: Mixed Air Temperature",
-        "AHU: Supply Air Temperature",
-        "AHU: Heating Coil Valve Control Signal",
-        "AHU: Supply Air Fan Speed Control Signal"
+        mix_degf_err_thres=MIX_DEGF_ERR_THRES,
+        supply_degf_err_thres=SUPPLY_DEGF_ERR_THRES,
+        delta_t_supply_fan=DELTA_T_SUPPLY_FAN,
+        mat_col="AHU: Mixed Air Temperature",
+        sat_col="AHU: Supply Air Temperature",
+        htg_vlv_col="AHU: Heating Coil Valve Control Signal",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

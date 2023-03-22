@@ -21,22 +21,22 @@ if __name__ == '__main__':
     SUPPLY_DEGF_ERR_THRES = 2
 
     _fc12 = FaultConditionTwelve(
-        DELTA_SUPPLY_FAN,
-        MIX_DEGF_ERR_THRES,
-        SUPPLY_DEGF_ERR_THRES,
-        AHU_MIN_OA,
-        "AHU: Supply Air Temperature",
-        "AHU: Mixed Air Temperature",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Outdoor Air Damper Control Signal"
+        delta_supply_fan=DELTA_SUPPLY_FAN,
+        mix_err_thres=MIX_DEGF_ERR_THRES,
+        supply_err_thres=SUPPLY_DEGF_ERR_THRES,
+        ahu_min_oa_dpr=AHU_MIN_OA,
+        sat_col="AHU: Supply Air Temperature",
+        mat_col="AHU: Mixed Air Temperature",
+        clg_col="AHU: Cooling Coil Valve Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal"
     )
 
     _fc12_report = FaultCodeTwelveReport(
-        "AHU: Supply Air Temperature",
-        "AHU: Mixed Air Temperature",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Outdoor Air Damper Control Signal",
-        "AHU: Supply Air Fan Speed Control Signal"
+        sat_col="AHU: Supply Air Temperature",
+        mat_col="AHU: Mixed Air Temperature",
+        clg_col="AHU: Cooling Coil Valve Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

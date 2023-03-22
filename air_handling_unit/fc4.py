@@ -20,12 +20,12 @@ if __name__ == '__main__':
     AHU_MIN_OA = .20
 
     _fc4 = FaultConditionFour(
-        DELTA_OS_MAX,
-        AHU_MIN_OA,
-        "AHU: Outdoor Air Damper Control Signal",
-        "AHU: Heating Coil Valve Control Signal",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Supply Air Fan Speed Control Signal"
+        delta_os_max=DELTA_OS_MAX,
+        ahu_min_oa=AHU_MIN_OA,
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
+        heating_sig_col="AHU: Heating Coil Valve Control Signal",
+        cooling_sig_col="AHU: Cooling Coil Valve Control Signal",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     _fc4_report = FaultCodeFourReport(DELTA_OS_MAX)

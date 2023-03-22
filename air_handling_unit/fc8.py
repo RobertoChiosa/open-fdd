@@ -21,21 +21,21 @@ if __name__ == '__main__':
     AHU_MIN_OA = 20
 
     _fc8 = FaultConditionEight(
-        DELTA_SUPPLY_FAN,
-        MIX_DEGF_ERR_THRES,
-        SUPPLY_DEGF_ERR_THRES,
-        AHU_MIN_OA,
-        "AHU: Mixed Air Temperature",
-        "AHU: Supply Air Temperature",
-        "AHU: Outdoor Air Damper Control Signal",
-        "AHU: Cooling Coil Valve Control Signal"
+        delta_supply_fan=DELTA_SUPPLY_FAN,
+        mix_err_thres=MIX_DEGF_ERR_THRES,
+        supply_err_thres=SUPPLY_DEGF_ERR_THRES,
+        ahu_min_oa=AHU_MIN_OA,
+        mat_col="AHU: Mixed Air Temperature",
+        sat_col="AHU: Supply Air Temperature",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
+        cooling_sig_col="AHU: Cooling Coil Valve Control Signal"
     )
 
     _fc8_report = FaultCodeEightReport(
-        "AHU: Mixed Air Temperature",
-        "AHU: Supply Air Temperature",
-        "AHU: Supply Air Fan Speed Control Signal",
-        "AHU: Outdoor Air Damper Control Signal"
+        sat_col="AHU: Mixed Air Temperature",
+        mat_col="AHU: Supply Air Temperature",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

@@ -20,20 +20,20 @@ if __name__ == '__main__':
     MAT_DEGF_ERR_THRES = 5
 
     _fc10 = FaultConditionTen(
-        OAT_DEGF_ERR_THRES,
-        MAT_DEGF_ERR_THRES,
-        "AHU: Mixed Air Temperature",
-        "AHU: Outdoor Air Temperature",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Outdoor Air Damper Control Signal",
+        oat_err_thres=OAT_DEGF_ERR_THRES,
+        mat_err_thres=MAT_DEGF_ERR_THRES,
+        mat_col="AHU: Mixed Air Temperature",  # todo seems wrong
+        oat_col="AHU: Outdoor Air Temperature",
+        clg_col="AHU: Cooling Coil Valve Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
     )
 
     _fc10_report = FaultCodeTenReport(
-        "AHU: Mixed Air Temperature",
-        "AHU: Outdoor Air Temperature",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Outdoor Air Damper Control Signal",
-        "AHU: Supply Air Fan Speed Control Signal"
+        oat_col="AHU: Mixed Air Temperature",
+        mat_col="AHU: Outdoor Air Temperature",
+        clg_col="AHU: Cooling Coil Valve Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

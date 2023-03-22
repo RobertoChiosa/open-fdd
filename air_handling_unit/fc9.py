@@ -21,21 +21,21 @@ if __name__ == '__main__':
     AHU_MIN_OA = 20
 
     _fc9 = FaultConditionNine(
-        DELTA_SUPPLY_FAN,
-        OAT_DEGF_ERR_THRES,
-        SUPPLY_DEGF_ERR_THRES,
-        AHU_MIN_OA,
-        "AHU: Supply Air Temperature Set Point",
-        "AHU: Outdoor Air Temperature",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Outdoor Air Damper Control Signal"
+        delta_supply_fan=DELTA_SUPPLY_FAN,
+        oat_err_thres=OAT_DEGF_ERR_THRES,
+        supply_err_thres=SUPPLY_DEGF_ERR_THRES,
+        ahu_min_oa=AHU_MIN_OA,
+        satsp_col="AHU: Supply Air Temperature Set Point",
+        oat_col="AHU: Outdoor Air Temperature",
+        cooling_sig_col="AHU: Cooling Coil Valve Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal"
     )
 
     _fc9_report = FaultCodeNineReport(
-        "AHU: Supply Air Temperature Set Point",
-        "AHU: Outdoor Air Temperature",
-        "AHU: Supply Air Fan Speed Control Signal",
-        "AHU: Outdoor Air Damper Control Signal"
+        satsp_col="AHU: Supply Air Temperature Set Point",
+        oat_col="AHU: Outdoor Air Temperature",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

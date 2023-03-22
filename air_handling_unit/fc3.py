@@ -18,23 +18,23 @@ if __name__ == '__main__':
     RETURN_DEGF_ERR_THRES = 2.
 
     _fc3 = FaultConditionThree(
-        MIX_DEGF_ERR_THRES,
-        RETURN_DEGF_ERR_THRES,
-        OUTDOOR_DEGF_ERR_THRES,
-        "AHU: Mixed Air Temperature",
-        "AHU: Return Air Temperature",
-        "AHU: Outdoor Air Temperature",
-        "AHU: Supply Air Fan Speed Control Signal"
+        mix_degf_err_thres=MIX_DEGF_ERR_THRES,
+        return_degf_err_thres=RETURN_DEGF_ERR_THRES,
+        outdoor_degf_err_thres=OUTDOOR_DEGF_ERR_THRES,
+        mat_col="AHU: Mixed Air Temperature",
+        rat_col="AHU: Return Air Temperature",
+        oat_col="AHU: Outdoor Air Temperature",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     _fc3_report = FaultCodeThreeReport(
-        MIX_DEGF_ERR_THRES,
-        RETURN_DEGF_ERR_THRES,
-        OUTDOOR_DEGF_ERR_THRES,
-        "AHU: Mixed Air Temperature",
-        "AHU: Return Air Temperature",
-        "AHU: Outdoor Air Temperature",
-        "AHU: Supply Air Fan Speed Control Signal"
+        mix_degf_err_thres=MIX_DEGF_ERR_THRES,
+        return_degf_err_thres=RETURN_DEGF_ERR_THRES,
+        outdoor_degf_err_thres=OUTDOOR_DEGF_ERR_THRES,
+        mat_col="AHU: Mixed Air Temperature",
+        rat_col="AHU: Return Air Temperature",
+        oat_col="AHU: Outdoor Air Temperature",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

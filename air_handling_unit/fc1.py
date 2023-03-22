@@ -24,21 +24,21 @@ if __name__ == '__main__':
     DUCT_STATIC_INCHES_ERR_THRES = 0.1
 
     _fc1 = FaultConditionOne(
-        VFD_SPEED_PERCENT_ERR_THRES,
-        VFD_SPEED_PERCENT_MAX,
-        DUCT_STATIC_INCHES_ERR_THRES,
-        "AHU: Supply Air Duct Static Pressure",
-        "AHU: Supply Air Fan Speed Control Signal",
-        "AHU: Supply Air Duct Static Pressure Set Point",
+        vfd_speed_percent_err_thres=VFD_SPEED_PERCENT_ERR_THRES,
+        vfd_speed_percent_max=VFD_SPEED_PERCENT_MAX,
+        duct_static_inches_err_thres=DUCT_STATIC_INCHES_ERR_THRES,
+        duct_static_col="AHU: Supply Air Duct Static Pressure",
+        supply_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal",
+        duct_static_setpoint_col="AHU: Supply Air Duct Static Pressure Set Point",
     )
 
     _fc1_report = FaultCodeOneReport(
-        VFD_SPEED_PERCENT_ERR_THRES,
-        VFD_SPEED_PERCENT_MAX,
-        DUCT_STATIC_INCHES_ERR_THRES,
-        "AHU: Supply Air Duct Static Pressure",
-        "AHU: Supply Air Fan Speed Control Signal",
-        "AHU: Supply Air Duct Static Pressure Set Point",
+        vfd_speed_percent_err_thres=VFD_SPEED_PERCENT_ERR_THRES,
+        vfd_speed_percent_max=VFD_SPEED_PERCENT_MAX,
+        duct_static_inches_err_thres=DUCT_STATIC_INCHES_ERR_THRES,
+        duct_static_col="AHU: Supply Air Duct Static Pressure",
+        supply_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal",
+        duct_static_setpoint_col="AHU: Supply Air Duct Static Pressure Set Point",
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling('5T').mean()

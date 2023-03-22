@@ -18,21 +18,21 @@ if __name__ == '__main__':
     SUPPLY_DEGF_ERR_THRES = 2
 
     _fc11 = FaultConditionEleven(
-        DELTA_SUPPLY_FAN,
-        OAT_DEGF_ERR_THRES,
-        SUPPLY_DEGF_ERR_THRES,
-        "AHU: Supply Air Temperature Set Point",
-        "AHU: Outdoor Air Temperature",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Outdoor Air Damper Control Signal"
+        delta_supply_fan=DELTA_SUPPLY_FAN,
+        oat_err_thres=OAT_DEGF_ERR_THRES,
+        supply_err_thres=SUPPLY_DEGF_ERR_THRES,
+        satsp_col="AHU: Supply Air Temperature Set Point",
+        oat_col="AHU: Outdoor Air Temperature",
+        clg_col="AHU: Cooling Coil Valve Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal"
     )
 
     _fc11_report = FaultCodeElevenReport(
-        "AHU: Supply Air Temperature Set Point",
-        "AHU: Outdoor Air Temperature",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Outdoor Air Damper Control Signal",
-        "AHU: Supply Air Fan Speed Control Signal"
+        sat_sp_col="AHU: Supply Air Temperature Set Point",
+        oat_col="AHU: Outdoor Air Temperature",
+        clg_col="AHU: Cooling Coil Valve Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

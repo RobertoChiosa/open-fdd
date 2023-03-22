@@ -59,18 +59,18 @@ if __name__ == '__main__':
     DUCT_STATIC_INCHES_ERR_THRES = 0.1
 
     _fc1 = FaultConditionOne(
-        VFD_SPEED_PERCENT_ERR_THRES,
-        VFD_SPEED_PERCENT_MAX,
-        DUCT_STATIC_INCHES_ERR_THRES,
+        vfd_speed_percent_err_thres=VFD_SPEED_PERCENT_ERR_THRES,
+        vfd_speed_percent_max=VFD_SPEED_PERCENT_MAX,
+        duct_static_inches_err_thres=DUCT_STATIC_INCHES_ERR_THRES,
         duct_static_col=res_dict['duct_static_col'],
         supply_vfd_speed_col=res_dict['supply_vfd_speed_col'],
         duct_static_setpoint_col=res_dict['duct_static_setpoint_col']
     )
 
     _fc1_report = FaultCodeOneReport(
-        VFD_SPEED_PERCENT_ERR_THRES,
-        VFD_SPEED_PERCENT_MAX,
-        DUCT_STATIC_INCHES_ERR_THRES,
+        vfd_speed_percent_err_thres=VFD_SPEED_PERCENT_ERR_THRES,
+        vfd_speed_percent_max=VFD_SPEED_PERCENT_MAX,
+        duct_static_inches_err_thres=DUCT_STATIC_INCHES_ERR_THRES,
         duct_static_col=res_dict['duct_static_col'],
         supply_vfd_speed_col=res_dict['supply_vfd_speed_col'],
         duct_static_setpoint_col=res_dict['duct_static_setpoint_col']

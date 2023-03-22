@@ -18,20 +18,20 @@ if __name__ == '__main__':
     SAT_DEGF_ERR_THRES = 2
 
     _fc13 = FaultConditionThirteen(
-        SAT_DEGF_ERR_THRES,
-        AHU_MIN_OA,
-        "AHU: Supply Air Temperature",
-        "AHU: Supply Air Temperature Set Point",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Outdoor Air Damper Control Signal",
+        sat_degf_err_thres=SAT_DEGF_ERR_THRES,
+        ahu_min_oa_dpr=AHU_MIN_OA,
+        sat_col="AHU: Supply Air Temperature",
+        satsp_col="AHU: Supply Air Temperature Set Point",
+        clg_col="AHU: Cooling Coil Valve Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
     )
 
     _fc13_report = FaultCodeThirteenReport(
-        "AHU: Supply Air Temperature",
-        "AHU: Supply Air Temperature Set Point",
-        "AHU: Cooling Coil Valve Control Signal",
-        "AHU: Outdoor Air Damper Control Signal",
-        "AHU: Supply Air Fan Speed Control Signal"
+        sat_col="AHU: Supply Air Temperature",
+        satsp_col="AHU: Supply Air Temperature Set Point",
+        clg_col="AHU: Cooling Coil Valve Control Signal",
+        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

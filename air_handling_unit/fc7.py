@@ -16,18 +16,18 @@ if __name__ == '__main__':
     SAT_DEGF_ERR_THRES = 2
 
     _fc7 = FaultConditionSeven(
-        SAT_DEGF_ERR_THRES,
-        "AHU: Supply Air Temperature",
-        "AHU: Supply Air Temperature Set Point",
-        "AHU: Heating Coil Valve Control Signal",
-        "AHU: Supply Air Fan Speed Control Signal"
+        sat_degf_err_thres=SAT_DEGF_ERR_THRES,
+        sat_col="AHU: Supply Air Temperature",
+        satsp_col="AHU: Supply Air Temperature Set Point",
+        htg_col="AHU: Heating Coil Valve Control Signal",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     _fc7_report = FaultCodeSevenReport(
-        "AHU: Supply Air Temperature",
-        "AHU: Supply Air Temperature Set Point",
-        "AHU: Heating Coil Valve Control Signal",
-        "AHU: Supply Air Fan Speed Control Signal"
+        sat_col="AHU: Supply Air Temperature",
+        satsp_col="AHU: Supply Air Temperature Set Point",
+        htg_col="AHU: Heating Coil Valve Control Signal",
+        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

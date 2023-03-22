@@ -2,7 +2,7 @@ import pandas as pd
 
 from faults import FaultConditionSix
 from reports import FaultCodeSixReport
-from utils import custom_arg_parser, save_report
+from utils import custom_arg_parser, save_report, describe_dataset
 
 # python 3.10 on Windows 10
 # py .\fc6.py -i ./ahu_data/hvac_random_fake_data/fc6_fake_data1.csv -o fake1_ahu_fc6_report
@@ -35,28 +35,28 @@ if __name__ == '__main__':
     AHU_MIN_OA_DPR = 20
 
     _fc6 = FaultConditionSix(
-        AIRFLOW_ERR_THRES,
-        AHU_MIN_CFM_DESIGN,
-        OAT_DEGF_ERR_THRES,
-        RAT_DEGF_ERR_THRES,
-        DELTA_TEMP_MIN,
-        AHU_MIN_OA_DPR,
-        "vav_total_flow",
-        "mat",
-        "oat",
-        "rat",
-        "supply_vfd_speed",
-        "economizer_sig",
-        "heating_sig",
-        "cooling_sig"
+        airflow_err_thres=AIRFLOW_ERR_THRES,
+        ahu_min_cfm_design=AHU_MIN_CFM_DESIGN,
+        oat_degf_err_thres=OAT_DEGF_ERR_THRES,
+        rat_degf_err_thres=RAT_DEGF_ERR_THRES,
+        oat_rat_delta_min=DELTA_TEMP_MIN,
+        ahu_min_oa_dpr=AHU_MIN_OA_DPR,
+        vav_total_flow_col="vav_total_flow",
+        mat_col="mat",
+        oat_col="oat",
+        rat_col="rat",
+        fan_vfd_speed_col="supply_vfd_speed",
+        economizer_sig_col="economizer_sig",
+        heating_sig_col="heating_sig",
+        cooling_sig_col="cooling_sig"
     )
 
     _fc6_report = FaultCodeSixReport(
-        "vav_total_flow",
-        "mat",
-        "oat",
-        "rat",
-        "supply_vfd_speed"
+        vav_total_flow_col="vav_total_flow",
+        mat_col="mat",
+        oat_col="oat",
+        rat_col="rat",
+        fan_vfd_speed_col="supply_vfd_speed"
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
