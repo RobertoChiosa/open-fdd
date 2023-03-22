@@ -93,518 +93,75 @@ of `12/22/2022  7:40:00 AM`:
 
 ## :hammer: Faults
 
-These faults are ...
+Faults are summarized in the following table.
 
-<details>
-<summary>fc1.py</summary>
-Supply fan not meeting duct static setpoint near 100% fan speed. The strings passed into
-the `FaultConditionOne` and `FaultCodeOneReport` represent the csv file column names and required inputs for the given
-fault code. Applies to OS# 1 through OS# 5.
+| Fault <br/>Condition |            Python<br/>File             | Description                                                                       | Applies to           |
+|:--------------------:|:--------------------------------------:|-----------------------------------------------------------------------------------|----------------------|
+|          1           |  [fc1.py](./air_handling_unit/fc1.py)  | Supply fan not meeting duct static setpoint near 100% fan speed.                  | OS# 1 through OS# 5. |
+|          2           |  [fc2.py](./air_handling_unit/fc2.py)  | Mixing temp too high.                                                             | OS# 1 through OS# 5. |
+|          3           |  [fc3.py](./air_handling_unit/fc3.py)  | Mixing temp too high.                                                             | OS# 1 through OS# 5. |
+|          4           |  [fc4.py](./air_handling_unit/fc4.py)  | Control system excesses operating state.[^1]                                      | OS# 1 through OS# 5. |
+|          5           |  [fc5.py](./air_handling_unit/fc5.py)  | Suppy air temp too low.                                                           | OS# 1.               |
+|          6           |  [fc6.py](./air_handling_unit/fc6.py)  | OA fraction too high.                                                             | OS# 1 and OS# 4.     |
+|          7           |  [fc7.py](./air_handling_unit/fc7.py)  | Supply air temp too low.                                                          | OS# 1.               |
+|          8           |  [fc8.py](./air_handling_unit/fc8.py)  | Supply and mix air should be approx equal.                                        | OS# 2.               |
+|          9           |  [fc9.py](./air_handling_unit/fc9.py)  | Outside air temp too high for free cooling without additional mechanical cooling. | OS# 2.               |
+|          10          | [fc10.py](./air_handling_unit/fc10.py) | Outside and mix air temp should be approx equal.                                  | OS# 3.               |
+|          11          | [fc11.py](./air_handling_unit/fc11.py) | Outside air temp too low for 100% OA cooling.                                     | OS# 3.               |
+|          12          | [fc12.py](./air_handling_unit/fc12.py) | Supply air too high; should be less than mix air temp.                            | OS# 3 and OS#4.      |
+|          13          | [fc13.py](./air_handling_unit/fc13.py) | Supply air temp too high in full cooling.                                         | OS# 3 and OS#4.      |
 
-```shell
-from faults import FaultConditionOne
-from reports import FaultCodeOneReport
+The fault python files are structured as follows.
 
-# G36 error thresold params
-VFD_SPEED_PERCENT_ERR_THRES = 0.05
-VFD_SPEED_PERCENT_MAX = 0.99
-DUCT_STATIC_INCHES_ERR_THRES = 0.1
+```python
+# parse command line parameters
+args = custom_arg_parser()
 
-_fc1 = FaultConditionOne(
-    VFD_SPEED_PERCENT_ERR_THRES,
-    VFD_SPEED_PERCENT_MAX,
-    DUCT_STATIC_INCHES_ERR_THRES,
-    "duct_static",
-    "supply_vfd_speed",
-    "duct_static_setpoint",
+# parameters settings
+PARAM_1 = 0.05
+PARAM_2 = 0.99
+PARAM_3 = 0.1
+[...]
+
+# instantiate fault condition class
+_fc = FaultConditionOne(
+    param_1=PARAM_1,
+    param_2=PARAM_2,
+    param_3=PARAM_3,
+    [...],
+    var_1="variable_name_1",
+    var_2="variable_name_2",
+    var_3="variable_name_3",
+    [...],
 )
-_fc1_report = FaultCodeOneReport(
-    VFD_SPEED_PERCENT_ERR_THRES,
-    VFD_SPEED_PERCENT_MAX,
-    DUCT_STATIC_INCHES_ERR_THRES,
-    "duct_static",
-    "supply_vfd_speed",
-    "duct_static_setpoint",
+
+# instantiate fault code report class
+_fc_report = FaultCodeOneReport(
+    param_1=PARAM_1,
+    param_2=PARAM_2,
+    param_3=PARAM_3,
+    [...],
+    var_1="variable_name_1",
+    var_2="variable_name_2",
+    var_3="variable_name_3",
+    [...],
 )
 
-df2 = _fc1.apply(df)
-```
+# read in csv file
+df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling('5T').mean()
 
-</details>
-
-<details>
-<summary>fc2.py</summary>
-Mixing temp too high. The strings passed into the `FaultConditionTwo` and `FaultCodeTwoReport` represent the
-csv file column names and required inputs for the given fault code. Applies to OS# 1 through OS# 5.
-
-```shell
-from faults import FaultConditionTwo
-from reports import FaultCodeTwoReport
-
-# G36 error threshold params
-OUTDOOR_DEGF_ERR_THRES = 5.
-MIX_DEGF_ERR_THRES = 5.
-RETURN_DEGF_ERR_THRES = 2.
-
-_fc2 = FaultConditionTwo(
-    OUTDOOR_DEGF_ERR_THRES,
-    MIX_DEGF_ERR_THRES,
-    RETURN_DEGF_ERR_THRES,
-    "mat",
-    "rat",
-    "oat",
-    "supply_vfd_speed"
-)
-_fc2_report = FaultCodeTwoReport(
-    OUTDOOR_DEGF_ERR_THRES,
-    MIX_DEGF_ERR_THRES,
-    RETURN_DEGF_ERR_THRES,
-    "mat",
-    "rat",
-    "oat",
-    "supply_vfd_speed"
-)
+# describe dataset printing some stuff
+describe_dataset(df)
 
 # return a whole new dataframe with fault flag as new col
-df2 = _fc2.apply(df)
+df_new = _fc.apply(df)
+
+# save report
+save_report(args, df, _fc_report)
 ```
 
-</details>
-
-<details>
-<summary>fc3.py</summary>
-Mixing temp too high. The strings passed into the `FaultConditionTwo` and `FaultCodeTwoReport` represent the
-csv file column names and required inputs for the given fault code. Applies to OS# 1 through OS# 5.
-
-```shell
-from faults import FaultConditionThree
-from reports import FaultCodeThreeReport
-
-# G36 error thresold params
-OUTDOOR_DEGF_ERR_THRES = 5.
-MIX_DEGF_ERR_THRES = 5.
-RETURN_DEGF_ERR_THRES = 2.
-
-
-_fc3 = FaultConditionThree(
-    OUTDOOR_DEGF_ERR_THRES,
-    MIX_DEGF_ERR_THRES,
-    RETURN_DEGF_ERR_THRES,
-    "mat",
-    "rat",
-    "oat",
-    "supply_vfd_speed"
-)
-_fc3_report = FaultCodeThreeReport(
-    OUTDOOR_DEGF_ERR_THRES,
-    MIX_DEGF_ERR_THRES,
-    RETURN_DEGF_ERR_THRES,
-    "mat",
-    "rat",
-    "oat",
-    "supply_vfd_speed"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc3.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc4.py</summary>
-Control system excesses operating state. The Pandas library computes AHU control system state changes per hour
-based on the data that is driving the AHU outputs, like heating/cooling valves and air damper analog commands. The
-strings passed into the `FaultConditionFour` and `FaultCodeFourReport` represent the csv file column names and required
-inputs for the given fault code. Applies to OS# 1 through OS# 5.
-
-```shell
-from faults import FaultConditionFour
-from reports import FaultCodeFourReport
-
-# G36 error thresold params
-DELTA_OS_MAX = 7
-
-# ADJUST this param for the AHU MIN OA damper stp
-AHU_MIN_OA = 20
-
-_fc4 = FaultConditionFour(
-    DELTA_OS_MAX,
-    AHU_MIN_OA,
-    "economizer_sig",
-    "heating_sig",
-    "cooling_sig",
-    "supply_vfd_speed"
-)
-
-_fc4_report = FaultCodeFourReport(DELTA_OS_MAX)
-
-# return a whole new dataframe with fault flag as new col
-# data is resampled for hourly averages in df2
-df2 = _fc4.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc5.py</summary>
-Suppy air temp too low. The strings passed into the `FaultConditionFive` and `FaultCodeFiveReport` represent
-the csv file column names and required inputs for the given fault code. Applies to OS# 1.
-
-```shell
-from faults import FaultConditionFive
-from reports import FaultCodeFiveReport
-
-# G36 error thresold params
-DELTA_T_SUPPLY_FAN = 2.
-SUPPLY_DEGF_ERR_THRES = 2.
-MIX_DEGF_ERR_THRES = 5.
-
-_fc5 = FaultConditionFive(
-    DELTA_T_SUPPLY_FAN,
-    SUPPLY_DEGF_ERR_THRES,
-    MIX_DEGF_ERR_THRES,
-    "sat",
-    "mat",
-    "htg_vlv",
-    "supply_vfd_speed"
-)
-
-
-_fc5_report = FaultCodeFiveReport(
-    DELTA_T_SUPPLY_FAN,
-    SUPPLY_DEGF_ERR_THRES,
-    MIX_DEGF_ERR_THRES,
-    "sat",
-    "mat",
-    "htg_vlv",
-    "supply_vfd_speed"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc5.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc6.py</summary>
-OA fraction too high. The strings passed into the `FaultConditionSix` and `FaultCodeSixReport` represent the
-csv file column names and required inputs for the given fault code. Applies to OS# 1 and OS# 4.
-
-```shell
-from faults import FaultConditionSix
-from reports import FaultCodeSixReport
-
-# G36 error thresold params
-OAT_DEGF_ERR_THRES = 5
-RAT_DEGF_ERR_THRES = 2
-DELTA_TEMP_MIN = 10
-AIRFLOW_ERR_THRES = .3
-
-# OA design ventilation setpoint in CFM
-AHU_MIN_CFM_STP = 3000
-
-_fc6 = FaultConditionSix(
-    AIRFLOW_ERR_THRES,
-    AHU_MIN_CFM_DESIGN,
-    OAT_DEGF_ERR_THRES,
-    RAT_DEGF_ERR_THRES,
-    DELTA_TEMP_MIN,
-    AHU_MIN_OA_DPR,
-    "vav_total_flow",
-    "mat",
-    "oat",
-    "rat",
-    "supply_vfd_speed",
-    "economizer_sig",
-    "heating_sig",
-    "cooling_sig"
-)
-
-_fc6_report = FaultCodeSixReport(
-    "vav_total_flow",
-    "mat",
-    "oat",
-    "rat",
-    "supply_vfd_speed"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc6.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc7.py</summary>
-Supply air temp too low. The strings passed into the `FaultConditionSeven` and `FaultCodeSevenReport` represent
-the csv file column names and required inputs for the given fault code. Applies to OS# 1.
-
-```shell
-from faults import FaultConditionSeven
-from reports import FaultCodeSevenReport
-
-# G36 error thresold params
-SAT_DEGF_ERR_THRES = 2
-
-_fc7 = FaultConditionSeven(
-    SAT_DEGF_ERR_THRES,
-    "sat",
-    "satsp",	
-    "htg",
-    "supply_vfd_speed"
-)
-
-_fc7_report = FaultCodeSevenReport(    
-    "sat",
-    "satsp",	
-    "htg",
-    "supply_vfd_speed"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc7.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc8.py</summary>
-Supply and mix air should be approx equal. The strings passed into the `FaultConditionEight`
-and `FaultCodeEightReport` represent the csv file column names and required inputs for the given fault code. Applies to
-OS# 2.
-
-```shell
-from faults import FaultConditionEight
-from reports import FaultCodeEightReport
-
-# G36 error thresold params
-DELTA_SUPPLY_FAN = 2
-MIX_DEGF_ERR_THRES = 5
-SUPPLY_DEGF_ERR_THRES = 2
-
-_fc8 = FaultConditionEight(
-    DELTA_SUPPLY_FAN,
-    MIX_DEGF_ERR_THRES,
-    SUPPLY_DEGF_ERR_THRES,
-    "mat",
-    "sat",
-    "economizer_sig",
-    "cooling_sig"
-)
-
-_fc8_report = FaultCodeEightReport(    
-    "mat",
-    "sat",
-    "supply_vfd_speed",
-    "economizer_sig"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc8.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc8.py</summary>
-Outside air temp too high for free cooling without additional mechanical cooling. The strings passed into
-the `FaultConditionNine` and `FaultCodeNineReport` represent the csv file column names and required inputs for the given
-fault code. Applies to OS# 2.
-
-```shell
-from faults import FaultConditionNine
-from reports import FaultCodeNineReport
-
-# G36 error thresold params
-DELTA_SUPPLY_FAN = 2
-OAT_DEGF_ERR_THRES = 5
-SUPPLY_DEGF_ERR_THRES = 2
-
-_fc9 = FaultConditionNine(
-    DELTA_SUPPLY_FAN,
-    OAT_DEGF_ERR_THRES,
-    SUPPLY_DEGF_ERR_THRES,
-    "satsp",
-    "oat",
-    "cooling_sig",
-    "economizer_sig",
-)
-
-_fc9_report = FaultCodeNineReport(    
-    "satsp",
-    "oat",
-    "supply_vfd_speed",
-    "economizer_sig"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc9.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc10.py</summary>
-Outside and mix air temp should be approx equal. The strings passed into the `FaultConditionTen`
-and `FaultCodeTenReport` represent the csv file column names and required inputs for the given fault code. Applies to
-OS# 3.
-
-```shell
-from faults import FaultConditionTen
-from reports import FaultCodeTenReport
-
-# ADJUST this param for the AHU MIN OA damper stp
-AHU_MIN_OA = 20
-
-# G36 error thresold params
-OAT_DEGF_ERR_THRES = 5
-MAT_DEGF_ERR_THRES = 5
-
-_fc10 = FaultConditionTen(
-    OAT_DEGF_ERR_THRES,
-    MAT_DEGF_ERR_THRES,
-    "mat",
-    "oat",
-    "clg",
-    "economizer_sig",
-)
-
-_fc10_report = FaultCodeTenReport(    
-    "mat",
-    "oat",
-    "clg",
-    "economizer_sig",
-    "supply_vfd_speed"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc10.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc11.py</summary>
-Outside air temp too low for 100% OA cooling. The strings passed into the `FaultConditionEleven`
-and `FaultCodeElevenReport` represent the csv file column names and required inputs for the given fault code. Applies to
-OS# 3.
-
-```shell
-from faults import FaultConditionEleven
-from reports import FaultCodeElevenReport
-
-# G36 error thresold params
-DELTA_SUPPLY_FAN = 2
-OAT_DEGF_ERR_THRES = 5
-SUPPLY_DEGF_ERR_THRES = 2
-
-_fc11 = FaultConditionEleven(
-    DELTA_SUPPLY_FAN,
-    OAT_DEGF_ERR_THRES,
-    SUPPLY_DEGF_ERR_THRES,
-    "satsp",
-    "oat",
-    "clg",
-    "economizer_sig"
-)
-
-_fc11_report = FaultCodeElevenReport(    
-    "satsp",
-    "oat",
-    "clg",
-    "economizer_sig",
-    "supply_vfd_speed"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc11.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc12.py</summary>
-Supply air too high; should be less than mix air temp. The strings passed into the `FaultConditionTwelve`
-and `FaultCodeTwelveReport` represent the csv file column names and required inputs for the given fault code. Applies to
-OS# 3 and OS#4.
-
-```shell
-from faults import FaultConditionTwelve
-from reports import FaultCodeTwelveReport
-
-# ADJUST this param for the AHU MIN OA damper stp
-AHU_MIN_OA = 20
-
-# G36 error thresold params
-DELTA_SUPPLY_FAN = 2
-MIX_DEGF_ERR_THRES = 5
-SUPPLY_DEGF_ERR_THRES = 2
-
-_fc12 = FaultConditionTwelve(
-    DELTA_SUPPLY_FAN,
-    MIX_DEGF_ERR_THRES,
-    SUPPLY_DEGF_ERR_THRES,
-    AHU_MIN_OA,
-    "sat",
-    "mat",
-    "clg",
-    "economizer_sig"
-)
-
-_fc12_report = FaultCodeTwelveReport(    
-    "sat",
-    "mat",
-    "clg",
-    "economizer_sig",
-    "supply_vfd_speed"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc12.apply(df)
-```
-
-</details>
-
-<details>
-<summary>fc13.py</summary>
-fc13.py - Supply air temp too high in full cooling. The strings passed into the `FaultConditionTwelve`
-and `FaultCodeTwelveReport` represent the csv file column names and required inputs for the given fault code. Applies to
-OS# 3 and OS#4.
-
-```shell
-from faults import FaultConditionThirteen
-from reports import FaultCodeThirteenReport
-
-# ADJUST this param for the AHU MIN OA damper stp
-AHU_MIN_OA = 20
-
-# G36 error thresold params
-SAT_DEGF_ERR_THRES = 2
-
-_fc13 = FaultConditionThirteen(
-    SAT_DEGF_ERR_THRES,
-    AHU_MIN_OA,
-    "sat",
-    "satsp",	
-    "clg",
-    "economizer_sig",
-)
-
-_fc13_report = FaultCodeThirteenReport(    
-    "sat",
-    "satsp",	
-    "clg",
-    "economizer_sig",
-    "supply_vfd_speed"
-)
-
-# return a whole new dataframe with fault flag as new col
-df2 = _fc13.apply(df)
-```
-
-</details>
+The strings passed into the `FaultCondition` class and `FaultCodeReport`class represent the csv file column names and
+required inputs for the given fault code.
 
 ## :warning: Other caveats
 
@@ -633,3 +190,6 @@ building carbon reduction efforts.
 ## :copyright: Licence
 
 [MIT License](./LICENSE) Copyright 2022 Ben Bartling
+
+[^1]: The Pandas library computes AHU control system state changes per hour based on the data that is driving the AHU
+outputs, like heating/cooling valves and air damper analog commands. 
