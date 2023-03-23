@@ -2,7 +2,7 @@ import pandas as pd
 
 from faults import FaultConditionFive
 from reports import FaultCodeFiveReport
-from utils import custom_arg_parser, save_report
+from utils import custom_arg_parser, save_report, describe_dataset
 
 # python 3.10 on Windows 10
 # py .\fc5.py -i ./ahu_data/MZVAV-1.csv -o MZVAV-1_fc5_report
@@ -16,24 +16,31 @@ if __name__ == '__main__':
     SUPPLY_DEGF_ERR_THRES = 2.
     MIX_DEGF_ERR_THRES = 5.
 
+    var_dict = {
+        "mat_col": "AHU: Mixed Air Temperature",
+        "sat_col": "AHU: Supply Air Temperature",
+        "htg_vlv_col": "AHU: Heating Coil Valve Control Signal",
+        "fan_vfd_speed_col": "AHU: Supply Air Fan Speed Control Signal"
+    }
+
     _fc5 = FaultConditionFive(
         mix_degf_err_thres=MIX_DEGF_ERR_THRES,
         supply_degf_err_thres=SUPPLY_DEGF_ERR_THRES,
         delta_t_supply_fan=DELTA_T_SUPPLY_FAN,
-        mat_col="AHU: Mixed Air Temperature",
-        sat_col="AHU: Supply Air Temperature",
-        htg_vlv_col="AHU: Heating Coil Valve Control Signal",
-        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
+        mat_col=var_dict["mat_col"],
+        sat_col=var_dict["sat_col"],
+        htg_vlv_col=var_dict["htg_vlv_col"],
+        fan_vfd_speed_col=var_dict["fan_vfd_speed_col"]
     )
 
     _fc5_report = FaultCodeFiveReport(
         mix_degf_err_thres=MIX_DEGF_ERR_THRES,
         supply_degf_err_thres=SUPPLY_DEGF_ERR_THRES,
         delta_t_supply_fan=DELTA_T_SUPPLY_FAN,
-        mat_col="AHU: Mixed Air Temperature",
-        sat_col="AHU: Supply Air Temperature",
-        htg_vlv_col="AHU: Heating Coil Valve Control Signal",
-        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
+        mat_col=var_dict["mat_col"],
+        sat_col=var_dict["sat_col"],
+        htg_vlv_col=var_dict["htg_vlv_col"],
+        fan_vfd_speed_col=var_dict["fan_vfd_speed_col"]
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

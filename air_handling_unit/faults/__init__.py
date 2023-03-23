@@ -274,7 +274,7 @@ class FaultConditionSix:
             rat_degf_err_thres: float,
             oat_rat_delta_min: float,
             ahu_min_oa_dpr: float,
-            vav_total_flow_col: float,
+            vav_total_flow_col: str,
             mat_col: str,
             oat_col: str,
             rat_col: str,

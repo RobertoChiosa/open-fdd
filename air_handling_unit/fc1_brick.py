@@ -32,9 +32,9 @@ if __name__ == '__main__':
     g = brickschema.Graph()
     # g = brickschema.Graph(load_brick_nightly=True)
     # adds the system metadata schema to the graph
-    g.parse(os.path.join('ahu_data', 'SDAHU.ttl'))
-    g.parse(os.path.join('ahu_data', 'Brick.ttl'),
-            format='turtle')  # Load Brick schema. We need it to exploit the hierarchy.
+    g.parse(os.path.join('..', 'data', 'SDAHU.ttl'))
+    # Load Brick schema. We need it to exploit the hierarchy.
+    g.parse(os.path.join('..', 'data', 'Brick.ttl'), format='turtle')
     q = """
         select ?duct_static_col ?supply_vfd_speed_col ?duct_static_setpoint_col where {
             ?duct_static_col rdf:type brick:Supply_Air_Static_Pressure_Sensor .
@@ -45,11 +45,10 @@ if __name__ == '__main__':
     """
     res = g.query(q)
 
-    res_df = parse_results(res, df=True)
+    res_df = parse_results(res, df=True, noPrefix=True)
     # convert res_df to dict
     res_dict = res_df.to_dict('records')[0]
-    # remove blg: prefix
-    res_dict = {k: v.replace('bldg:', '') for k, v in res_dict.items()}
+
     ###########################
 
     # G36 params shouldn't need adjusting

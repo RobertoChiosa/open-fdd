@@ -23,22 +23,29 @@ if __name__ == '__main__':
     VFD_SPEED_PERCENT_MAX = 0.99
     DUCT_STATIC_INCHES_ERR_THRES = 0.1
 
+    # define dictionary to be mapped with brick points
+    var_dict = {
+        "duct_static_col": "AHU: Supply Air Duct Static Pressure",
+        "supply_vfd_speed_col": "AHU: Supply Air Fan Speed Control Signal",
+        "duct_static_setpoint_col": "AHU: Supply Air Duct Static Pressure Set Point"
+    }
+
     _fc1 = FaultConditionOne(
         vfd_speed_percent_err_thres=VFD_SPEED_PERCENT_ERR_THRES,
         vfd_speed_percent_max=VFD_SPEED_PERCENT_MAX,
         duct_static_inches_err_thres=DUCT_STATIC_INCHES_ERR_THRES,
-        duct_static_col="AHU: Supply Air Duct Static Pressure",
-        supply_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal",
-        duct_static_setpoint_col="AHU: Supply Air Duct Static Pressure Set Point",
+        duct_static_col=var_dict["duct_static_col"],
+        supply_vfd_speed_col=var_dict["supply_vfd_speed_col"],
+        duct_static_setpoint_col=var_dict["duct_static_setpoint_col"],
     )
 
     _fc1_report = FaultCodeOneReport(
         vfd_speed_percent_err_thres=VFD_SPEED_PERCENT_ERR_THRES,
         vfd_speed_percent_max=VFD_SPEED_PERCENT_MAX,
         duct_static_inches_err_thres=DUCT_STATIC_INCHES_ERR_THRES,
-        duct_static_col="AHU: Supply Air Duct Static Pressure",
-        supply_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal",
-        duct_static_setpoint_col="AHU: Supply Air Duct Static Pressure Set Point",
+        duct_static_col=var_dict["duct_static_col"],
+        supply_vfd_speed_col=var_dict["supply_vfd_speed_col"],
+        duct_static_setpoint_col=var_dict["duct_static_setpoint_col"],
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling('5T').mean()

@@ -2063,10 +2063,10 @@ class FaultCodeEightReport:
 
     def __init__(
             self,
-            sat_col: str,
             mat_col: str,
-            fan_vfd_speed_col: str,
+            sat_col: str,
             economizer_sig_col: str,
+            fan_vfd_speed_col: str,
     ):
         self.sat_col = sat_col
         self.mat_col = mat_col
@@ -2869,13 +2869,13 @@ class FaultCodeElevenReport:
 
     def __init__(
             self,
-            sat_sp_col: str,
+            satsp_col: str,
             oat_col: str,
             clg_col: str,
             economizer_sig_col: str,
             fan_vfd_speed_col: str,
     ):
-        self.sat_sp_col = sat_sp_col
+        self.satsp_col = satsp_col
         self.oat_col = oat_col
         self.clg_col = clg_col
         self.economizer_sig_col = economizer_sig_col
@@ -2889,7 +2889,7 @@ class FaultCodeElevenReport:
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(25, 8))
         plt.title('Fault Conditions 11 Plot')
 
-        ax1.plot(df.index, df[self.sat_sp_col], label="SATSP")
+        ax1.plot(df.index, df[self.satsp_col], label="SATSP")
 
         ax1.plot(df.index, df[self.oat_col], label="OAT")
         ax1.legend(loc='best')
@@ -2931,7 +2931,7 @@ class FaultCodeElevenReport:
             df[self.oat_col].where(df[output_col] == 1).mean(), 2
         )
         flag_true_sat_sp = round(
-            df[self.sat_sp_col].where(df[output_col] == 1).mean(), 2
+            df[self.satsp_col].where(df[output_col] == 1).mean(), 2
         )
 
         motor_on = df[self.fan_vfd_speed_col].gt(.01).astype(int)
@@ -3107,7 +3107,7 @@ class FaultCodeElevenReport:
         paragraph = document.add_paragraph()
         paragraph.style = 'List Bullet'
         paragraph.add_run(
-            str(df_motor_on_filtered[self.sat_sp_col].describe()))
+            str(df_motor_on_filtered[self.satsp_col].describe()))
 
         # ADD in Summary Statistics
         document.add_heading('Outside Air Temp', level=3)

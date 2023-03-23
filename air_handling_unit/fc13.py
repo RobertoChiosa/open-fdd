@@ -17,21 +17,28 @@ if __name__ == '__main__':
     # error threshold parameters
     SAT_DEGF_ERR_THRES = 2
 
+    var_dict = {
+        "sat_col": "AHU: Supply Air Temperature",
+        "satsp_col": "AHU: Supply Air Temperature Set Point",
+        "clg_col": "AHU: Cooling Coil Valve Control Signal",
+        "economizer_sig_col": "AHU: Outdoor Air Damper Control Signal",
+        "fan_vfd_speed_col": "AHU: Supply Air Fan Speed Control Signal"
+    }
     _fc13 = FaultConditionThirteen(
         sat_degf_err_thres=SAT_DEGF_ERR_THRES,
         ahu_min_oa_dpr=AHU_MIN_OA,
-        sat_col="AHU: Supply Air Temperature",
-        satsp_col="AHU: Supply Air Temperature Set Point",
-        clg_col="AHU: Cooling Coil Valve Control Signal",
-        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
+        sat_col=var_dict["sat_col"],
+        satsp_col=var_dict["satsp_col"],
+        clg_col=var_dict["clg_col"],
+        economizer_sig_col=var_dict["economizer_sig_col"]
     )
 
     _fc13_report = FaultCodeThirteenReport(
-        sat_col="AHU: Supply Air Temperature",
-        satsp_col="AHU: Supply Air Temperature Set Point",
-        clg_col="AHU: Cooling Coil Valve Control Signal",
-        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
-        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
+        sat_col=var_dict["sat_col"],
+        satsp_col=var_dict["satsp_col"],
+        clg_col=var_dict["clg_col"],
+        economizer_sig_col=var_dict["economizer_sig_col"],
+        fan_vfd_speed_col=var_dict["fan_vfd_speed_col"]
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()

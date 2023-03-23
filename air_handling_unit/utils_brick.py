@@ -42,7 +42,7 @@ def operational_mode(df):
     return df
 
 
-def parse_results(results, explicit=True, fullURI=False, df=True):
+def parse_results(results, explicit=True, fullURI=False, df=True, noPrefix=False):
     m = {
         'https://brickschema.org/schema/Brick': 'brick',
         'http://www.w3.org/1999/02/22-rdf-syntax-ns': 'rdf',
@@ -67,7 +67,15 @@ def parse_results(results, explicit=True, fullURI=False, df=True):
         rows = [
             [m[r.split('#')[0]] + ':' + r.split('#')[1] if isinstance(r, URIRef) and '#' in r else r for r in
              row] for row in results]
-        out = rows
+
+        if noPrefix is True:
+            # split prefix from name in list comprehension
+            out = [[item.split(':')[1] if isinstance(item, str) and ':' in item else item for item in row] for row in
+                   rows]
+
+        else:
+            out = rows
+
     else:
         out = list(results)
 

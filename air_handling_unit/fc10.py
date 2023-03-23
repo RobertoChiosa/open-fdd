@@ -19,21 +19,29 @@ if __name__ == '__main__':
     OAT_DEGF_ERR_THRES = 5
     MAT_DEGF_ERR_THRES = 5
 
+    var_dict = {
+        "mat_col": "AHU: Mixed Air Temperature",
+        "oat_col": "AHU: Outdoor Air Temperature",
+        "clg_col": "AHU: Cooling Coil Valve Control Signal",
+        "economizer_sig_col": "AHU: Outdoor Air Damper Control Signal",
+        "fan_vfd_speed_col": "AHU: Supply Air Fan Speed Control Signal"
+    }
+
     _fc10 = FaultConditionTen(
         oat_err_thres=OAT_DEGF_ERR_THRES,
         mat_err_thres=MAT_DEGF_ERR_THRES,
-        mat_col="AHU: Mixed Air Temperature",  # todo seems wrong
-        oat_col="AHU: Outdoor Air Temperature",
-        clg_col="AHU: Cooling Coil Valve Control Signal",
-        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
+        oat_col=var_dict["oat_col"],
+        mat_col=var_dict["mat_col"],
+        clg_col=var_dict["clg_col"],
+        economizer_sig_col=var_dict["economizer_sig_col"]
     )
 
     _fc10_report = FaultCodeTenReport(
-        oat_col="AHU: Mixed Air Temperature",
-        mat_col="AHU: Outdoor Air Temperature",
-        clg_col="AHU: Cooling Coil Valve Control Signal",
-        economizer_sig_col="AHU: Outdoor Air Damper Control Signal",
-        fan_vfd_speed_col="AHU: Supply Air Fan Speed Control Signal"
+        oat_col=var_dict["oat_col"],
+        mat_col=var_dict["mat_col"],
+        clg_col=var_dict["clg_col"],
+        economizer_sig_col=var_dict["economizer_sig_col"],
+        fan_vfd_speed_col=var_dict["fan_vfd_speed_col"]
     )
 
     df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
