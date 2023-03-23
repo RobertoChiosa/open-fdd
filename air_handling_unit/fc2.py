@@ -3,6 +3,7 @@ import pandas as pd
 from faults import FaultConditionTwo
 from reports import FaultCodeTwoReport
 from utils import custom_arg_parser, save_report, describe_dataset
+from utils_brick import query_metadata
 
 # python 3.10 on Windows 10
 # py .\fc2.py -i ./ahu_data/MZVAV-1.csv -o MZVAV-1_fc2_report
@@ -28,6 +29,19 @@ if __name__ == '__main__':
         "oat_col": "AHU: Outdoor Air Temperature",
         "fan_vfd_speed_col": "AHU: Supply Air Fan Speed Control Signal"
     }
+
+    q = """ select 
+            ?duct_static_col 
+            ?supply_vfd_speed_col 
+            ?duct_static_setpoint_col 
+            where {
+                ?duct_static_col            rdf:type        brick:Supply_Air_Static_Pressure_Sensor .
+                ?supply_vfd_speed_col       rdf:type        brick:Speed_Setpoint .
+                bldg:Supply_Air_Fan         brick:hasPoint  ?supply_vfd_speed_col .
+                ?duct_static_setpoint_col   rdf:type        brick:Supply_Air_Static_Pressure_Setpoint .
+            }
+        """
+    var_dict = query_metadata(q)
 
     _fc2 = FaultConditionTwo(
         mix_degf_err_thres=MIX_DEGF_ERR_THRES,

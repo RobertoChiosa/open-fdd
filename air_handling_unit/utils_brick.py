@@ -1,3 +1,6 @@
+import os
+
+import brickschema
 import pandas as pd
 from IPython import get_ipython
 from rdflib import URIRef, Variable
@@ -84,3 +87,21 @@ def parse_results(results, explicit=True, fullURI=False, df=True, noPrefix=False
             data=out, columns=[str(item) for item in results.vars if isinstance(item, Variable)])
 
     return out
+
+
+def query_metadata(query_string):
+    # load metadata and find the relative columns requested
+    # generate a blank graph
+    g = brickschema.Graph()
+    # g = brickschema.Graph(load_brick_nightly=True)
+    # adds the system metadata schema to the graph
+    g.parse(os.path.join('..', 'data', 'SDAHU.ttl'))
+    # Load Brick schema. We need it to exploit the hierarchy.
+    g.parse(os.path.join('..', 'data', 'Brick.ttl'), format='turtle')
+    res = g.query(query_string)
+
+    res_df = parse_results(res, df=True, noPrefix=True)
+    # convert res_df to dict
+    res_dict = res_df.to_dict('records')[0]
+
+    return res_dict
