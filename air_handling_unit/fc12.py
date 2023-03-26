@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import pandas as pd
 
 from faults import FaultConditionTwelve
@@ -51,7 +53,7 @@ if __name__ == '__main__':
         fan_vfd_speed_col=var_dict["fan_vfd_speed_col"]
     )
 
-    df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
+    df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling(timedelta(minutes=5)).mean()
 
     # describe dataset printing some stuff
     describe_dataset(df)

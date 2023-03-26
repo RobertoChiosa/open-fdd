@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import pandas as pd
 
 from faults import FaultConditionTwo
@@ -63,11 +65,11 @@ if __name__ == '__main__':
         fan_vfd_speed_col=var_dict["fan_vfd_speed_col"]
     )
 
-    df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling("5T").mean()
+    df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling(timedelta(minutes=5)).mean()
 
     '''
     # weather data from a different source
-    oat = pd.read_csv('./ahu_data/oat.csv', index_col="Date", parse_dates=True).rolling("5T").mean()
+    oat = pd.read_csv('./ahu_data/oat.csv', index_col="Date", parse_dates=True).rolling(timedelta(minutes=5)).mean()
     df = oat.join(df)
     df = df.ffill().bfill()
     print(df)

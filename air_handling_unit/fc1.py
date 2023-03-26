@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import pandas as pd
 
 from faults import FaultConditionOne
@@ -48,7 +50,7 @@ if __name__ == '__main__':
         duct_static_setpoint_col=var_dict["duct_static_setpoint_col"],
     )
 
-    df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling('5T').mean()
+    df = pd.read_csv(args.input, index_col="Date", parse_dates=True).rolling(timedelta(minutes=5)).mean()
 
     # describe dataset printing some stuff
     describe_dataset(df)
